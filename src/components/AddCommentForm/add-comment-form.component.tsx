@@ -18,10 +18,18 @@ export function AddCommentForm({
         [errors]
     );
     return (
-        <form onSubmit={formik.handleSubmit} onReset={formik.handleReset}>
+        <form
+            onSubmit={formik.handleSubmit}
+            onReset={formik.handleReset}
+            data-testid="addComment-form"
+        >
             <h2 className="lbh-heading-h2">Add comment</h2>
             {success ? (
-                <section className="lbh-page-announcement" role="alert">
+                <section
+                    className="lbh-page-announcement"
+                    role="alert"
+                    data-testid="addComment-success"
+                >
                     <h3 className="lbh-page-announcement__title">
                         Comment successfully saved
                     </h3>
@@ -33,6 +41,7 @@ export function AddCommentForm({
                         aria-labelledby="add-comment-error"
                         role="alert"
                         tabIndex={-1}
+                        data-testid="addComment-error"
                     >
                         <h2
                             className="govuk-error-summary__title"
