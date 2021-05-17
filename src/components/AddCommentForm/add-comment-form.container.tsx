@@ -82,7 +82,10 @@ export function AddCommentFormContainer(): JSX.Element {
     });
 
     useEffect(() => {
-        setGlobalSuccess(false);
+        const hasErrors = Object.keys(formik.errors).length > 0;
+        if (hasErrors) {
+            setGlobalSuccess(false);
+        }
     }, [formik.errors]);
 
     if (!id || status === 'invalid') {
