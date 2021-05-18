@@ -15,8 +15,8 @@ const loadForm = async (id?: string) => {
     );
 
     await waitFor(() =>
-    expect(screen.getByText('Back to Persons Details')).toBeInTheDocument()
-);
+        expect(screen.getByText('Back to Persons Details')).toBeInTheDocument()
+    );
 
     return utils;
 };
