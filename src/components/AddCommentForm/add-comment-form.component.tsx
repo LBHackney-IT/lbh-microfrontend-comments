@@ -27,8 +27,9 @@ export function AddCommentForm({
                 <a
                     href={`/person/${person.id}`}
                     className="govuk-back-link lbh-back-link"
+                    data-testid="backButton"
                 >
-                    Back to Persons Details
+                    {`${person.firstName} ${person.surname}`}
                 </a>
             </div>
             <h2 className="lbh-heading-h2">Add comment</h2>
@@ -71,7 +72,10 @@ export function AddCommentForm({
                     </div>
                 )
             )}
-            <h3 className="add-comment-person govuk-label lbh-label">
+            <h3
+                className="add-comment-person govuk-label lbh-label"
+                data-testid="title"
+            >
                 Add comment to <b>{`${person.firstName} ${person.surname}`}</b>:
             </h3>
             <FormGroup
