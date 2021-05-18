@@ -23,6 +23,14 @@ export function AddCommentForm({
             onReset={formik.handleReset}
             data-testid="addComment-form"
         >
+            <div className="lbh-container">
+                <a
+                    href={`/person/${person.id}`}
+                    className="govuk-back-link lbh-back-link"
+                >
+                    Back to Persons Details
+                </a>
+            </div>
             <h2 className="lbh-heading-h2">Add comment</h2>
             {success ? (
                 <section
