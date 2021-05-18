@@ -10,9 +10,12 @@ import { server } from '../../mocks/server';
 
 const loadForm = async (id?: string) => {
     const utils = customRender(<AddCommentFormContainer />, id);
-    await waitFor(() =>
-        expect(screen.getByText('Save comment')).toBeInTheDocument()
-    );
+    await waitFor(() => {
+        expect(screen.getByText('Save comment')).toBeInTheDocument();
+        expect(screen.getByTestId('backButton').textContent).toEqual(
+            screen.getByTestId('title').textContent
+        );
+    });
 
     return utils;
 };
