@@ -14,6 +14,10 @@ const loadForm = async (id?: string) => {
         expect(screen.getByText('Save comment')).toBeInTheDocument()
     );
 
+    await waitFor(() =>
+    expect(screen.getByText('Back to Persons Details')).toBeInTheDocument()
+);
+
     return utils;
 };
 
