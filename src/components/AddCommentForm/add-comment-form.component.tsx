@@ -72,11 +72,10 @@ export function AddCommentForm({
                     </div>
                 )
             )}
-            <h3
-                className="add-comment-person govuk-label lbh-label"
-                data-testid="title"
-            >
-                Add comment to <b>{`${person.firstName} ${person.surname}`}</b>:
+            <h3 className="add-comment-person govuk-label lbh-label">
+                Add comment to{' '}
+                <b data-testid="titleName">{`${person.firstName} ${person.surname}`}</b>
+                :
             </h3>
             <FormGroup
                 id="person-comment-description"
