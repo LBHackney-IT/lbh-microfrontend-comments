@@ -13,7 +13,7 @@ const loadForm = async (id?: string) => {
     await waitFor(() => {
         expect(screen.getByText('Save comment')).toBeInTheDocument();
         expect(screen.getByTestId('backButton').textContent).toEqual(
-            screen.getByTestId('title').textContent
+            screen.getByTestId('titleName').textContent
         );
     });
 
