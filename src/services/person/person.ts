@@ -1,4 +1,4 @@
-import { $auth } from '@mtfh/auth';
+import { $auth } from '@mtfh/common';
 import { GetPersonRequestData, Person } from './person.types';
 import { config } from '../config';
 import { ResponseException } from '../../utils';

@@ -1,4 +1,4 @@
-import { $auth } from '@mtfh/auth';
+import { $auth } from '@mtfh/common';
 import { ResponseException } from '@utilities';
 import { AddCommentRequestData, Comment } from './comments.types';
 import { config } from '../config';

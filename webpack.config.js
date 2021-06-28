@@ -55,7 +55,7 @@ module.exports = (webpackConfigEnv, argv) => {
             },
             extensions: ['.ts', '.tsx', '.js'],
         },
-        externals: ['@mtfh/auth'],
+        externals: ['@mtfh/common'],
         plugins: [
             new webpack.EnvironmentPlugin({
                 NOTES_API_URL: dotenv.NOTES_API_URL || '',
