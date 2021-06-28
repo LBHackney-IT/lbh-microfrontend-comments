@@ -1,6 +1,9 @@
 {
     "extends": "ts-config-single-spa",
-    "include": ["src/**/*", "typings/**/*.d.ts"],
+    "include": [
+        "src/**/*",
+        "node_modules/@mtfh/common/src/types/lbh-frontend.d.ts"
+    ],
     "compilerOptions": {
         "strict": true,
         "jsx": "react",
