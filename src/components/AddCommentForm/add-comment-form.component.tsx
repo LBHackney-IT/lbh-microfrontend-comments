@@ -1,4 +1,6 @@
 import React, { useMemo } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
+import { Link } from '@mtfh/common';
 
 import './add-comment-form.styles.scss';
 import { FormGroup, TextArea } from '@components';
@@ -23,14 +25,15 @@ export function AddCommentForm({
             onReset={formik.handleReset}
             data-testid="addComment-form"
         >
-            <div className="lbh-container">
-                <a
+            <div>
+                <Link
+                    as={RouterLink}
                     href={`/person/${person.id}`}
-                    className="govuk-back-link lbh-back-link"
+                    variant="back-link"
                     data-testid="backButton"
                 >
                     {`${person.firstName} ${person.surname}`}
-                </a>
+                </Link>
             </div>
             <h2 className="lbh-heading-h2">Add comment</h2>
             {success ? (

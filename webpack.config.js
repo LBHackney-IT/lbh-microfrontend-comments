@@ -55,7 +55,7 @@ module.exports = (webpackConfigEnv, argv) => {
             },
             extensions: ['.ts', '.tsx', '.js'],
         },
-        externals: ['@mtfh/common'],
+        externals: ['@mtfh/common', 'react-router-dom'],
         plugins: [
             new webpack.EnvironmentPlugin({
                 NOTES_API_URL: dotenv.NOTES_API_URL || '',
