@@ -1,5 +1,5 @@
-import React, { useMemo } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
+import React, { useMemo } from 'react';
 import { Link } from '@mtfh/common';
 
 import './add-comment-form.styles.scss';
@@ -28,7 +28,7 @@ export function AddCommentForm({
             <div>
                 <Link
                     as={RouterLink}
-                    href={`/person/${person.id}`}
+                    to={`/person/${person.id}`}
                     variant="back-link"
                     data-testid="backButton"
                 >
