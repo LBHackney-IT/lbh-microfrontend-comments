@@ -132,6 +132,7 @@ jobs:
                     export NOTES_API_KEY=$(aws ssm get-parameter --name /housing-tl/<<parameters.stage>>/notes-api-key --query Parameter.Value --output text)
                     export PERSON_API_URL=$(aws ssm get-parameter --name /housing-tl/<<parameters.stage>>/person-api-url --query Parameter.Value --output text)
                     export PERSON_API_KEY=$(aws ssm get-parameter --name /housing-tl/<<parameters.stage>>/person-api-key --query Parameter.Value --output text)
+                    export TENURE_API_URL=$(aws ssm get-parameter --name /housing-tl/<<parameters.stage>>/tenure-api-url --query Parameter.Value --output text)
                     yarn build
             - run:
                   name: Deploy to S3
@@ -153,6 +154,7 @@ jobs:
                     export NOTES_API_KEY=$(aws ssm get-parameter --name /housing-tl/<<parameters.stage>>/notes-api-key --query Parameter.Value --output text)
                     export PERSON_API_URL=$(aws ssm get-parameter --name /housing-tl/<<parameters.stage>>/person-api-url --query Parameter.Value --output text)
                     export PERSON_API_KEY=$(aws ssm get-parameter --name /housing-tl/<<parameters.stage>>/person-api-key --query Parameter.Value --output text)
+                    export TENURE_API_URL=$(aws ssm get-parameter --name /housing-tl/<<parameters.stage>>/tenure-api-url --query Parameter.Value --output text)
                     yarn build
             - run:
                   name: Deploy to S3
@@ -174,6 +176,7 @@ jobs:
                     export NOTES_API_KEY=$(aws ssm get-parameter --name /housing-tl/<<parameters.stage>>/notes-api-key --query Parameter.Value --output text)
                     export PERSON_API_URL=$(aws ssm get-parameter --name /housing-tl/<<parameters.stage>>/person-api-url --query Parameter.Value --output text)
                     export PERSON_API_KEY=$(aws ssm get-parameter --name /housing-tl/<<parameters.stage>>/person-api-key --query Parameter.Value --output text)
+                    export TENURE_API_URL=$(aws ssm get-parameter --name /housing-tl/<<parameters.stage>>/tenure-api-url --query Parameter.Value --output text)
                     yarn build
             - run:
                   name: Deploy to S3
