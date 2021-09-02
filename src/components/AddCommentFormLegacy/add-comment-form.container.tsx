@@ -3,7 +3,7 @@ import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useFormik } from 'formik';
 
 import { ResponseException } from '@utilities';
-import { addComment, getPersonById, Person } from '@services';
+import { addComment, getPersonById } from '@services';
 import {
     AddCommentUrlParameters,
     FetchState,
@@ -11,6 +11,7 @@ import {
 } from './add-comment-form.types';
 import { schema } from './add-comment-form.schema';
 import { AddCommentForm } from './add-comment-form.component';
+import { Person } from '../../types';
 
 export function AddCommentFormContainer(): JSX.Element {
     const { type, id } = useParams<AddCommentUrlParameters>();

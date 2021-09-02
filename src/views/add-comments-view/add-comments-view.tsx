@@ -1,6 +1,5 @@
 import { useParams, Link as RouterLink } from 'react-router-dom';
 import React from 'react';
-
 import {
     Center,
     ErrorSummary,
@@ -11,27 +10,33 @@ import {
     Spinner,
 } from '@mtfh/common';
 
-export const AddCommentsView = (): JSX.Element => {
-    const { entityId } = useParams<{ entityId: string }>();
-    console.log('entityId', entityId);
+import { locale, usePerson } from '../../services';
 
-    if (false) {
+const { comments } = locale;
+
+export const AddCommentsView = (): JSX.Element => {
+    const { type, id } = useParams<{ type: string; id: string }>();
+    const { data: entityData, error } = usePerson(id);
+
+    if (error) {
         return (
             <ErrorSummary
                 id="entitiy-error"
-                title="{locale.errors.unableToFetchRecord}"
-                description="{locale.errors.unableToFetchRecordDescription}"
+                title={locale.errors.unableToFetchRecord}
+                description={locale.errors.unableToFetchRecordDescription}
             />
         );
     }
 
-    if (false) {
+    if (!entityData) {
         return (
             <Center>
                 <Spinner />
             </Center>
         );
     }
+
+    const { addCommentToLabel, entityName } = comments;
 
     return (
         <PageAnnouncementProvider sessionKey="addComment">
@@ -41,15 +46,19 @@ export const AddCommentsView = (): JSX.Element => {
                     <>
                         <Link
                             as={RouterLink}
-                            to={`/tenure/${entityId}`}
+                            to={`/${type}/${id}`}
                             variant="back-link"
                         >
-                            Back Link
+                            {locale.backLinkLabel(entityData)}
                         </Link>
-                        <h1 className="lbh-heading-h1">
-                            <h1>H1 tag</h1>
-                        </h1>
-                        <h2>H2 tag</h2>
+                        <h2 className="lbh-heading-h2">{comments.heading}</h2>
+                        <h3 className="add-comment-person govuk-label lbh-label">
+                            {addCommentToLabel}{' '}
+                            <b data-testid="titleName">
+                                {entityName(entityData)}
+                            </b>
+                            :
+                        </h3>
                     </>
                 }
                 data-testid="add-comment"

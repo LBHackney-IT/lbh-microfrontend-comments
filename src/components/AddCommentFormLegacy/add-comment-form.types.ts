@@ -1,7 +1,7 @@
 import { Asserts } from 'yup';
 import { FormikProps } from 'formik';
-import { Person } from '@services';
 import { schema } from './add-comment-form.schema';
+import { Person } from '../../types';
 
 export interface AddCommentUrlParameters {
     id: string;

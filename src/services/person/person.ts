@@ -1,12 +1,16 @@
 import { $auth, AxiosSWRResponse, useAxiosSWR } from '@mtfh/common';
-import { GetPersonRequestData, Person } from './person.types';
 import { config } from '../config';
 import { ResponseException } from '../../utils';
+import { GetPersonRequestData, Person } from '../../types';
 
 const headers = {
     'Content-Type': 'application/json',
     'x-api-key': config.personApiKey,
     'Authorization': `Bearer ${$auth.getValue().token}`,
+};
+
+export const usePerson = (id: string): AxiosSWRResponse<Person> => {
+    return useAxiosSWR<Person>(`${config.personApiUrl}/persons/${id}`);
 };
 
 export const getPersonById = async ({
