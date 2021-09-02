@@ -3,6 +3,7 @@ import React from 'react';
 import { hasToggle } from '@mtfh/common';
 import './root.styles.scss';
 import { AddCommentFormLegacy } from '@components';
+import { AddCommentsView } from './views/add-comments-view';
 
 export default function Root(): JSX.Element {
     const refactorCommentsToggle = hasToggle('MMH.RefactorComments');
@@ -11,7 +12,7 @@ export default function Root(): JSX.Element {
             <Switch>
                 <Route path="/comment/:type/:id">
                     {refactorCommentsToggle ? (
-                        <h1>placeholder</h1>
+                        <AddCommentsView />
                     ) : (
                         <AddCommentFormLegacy />
                     )}
