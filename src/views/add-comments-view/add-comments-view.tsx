@@ -11,19 +11,23 @@ import {
 } from '@mtfh/common';
 
 import { locale, usePerson } from '../../services';
+import { AddCommentForm } from '../../components';
 
-const { comments } = locale;
+const { backLinkLabel, comments, errors } = locale;
 
 export const AddCommentsView = (): JSX.Element => {
     const { type, id } = useParams<{ type: string; id: string }>();
     const { data: entityData, error } = usePerson(id);
 
+    const { entityName, heading } = comments;
+    const { unableToFetchRecord, unableToFetchRecordDescription } = errors;
+
     if (error) {
         return (
             <ErrorSummary
-                id="entitiy-error"
-                title={locale.errors.unableToFetchRecord}
-                description={locale.errors.unableToFetchRecordDescription}
+                id="entity-error"
+                title={unableToFetchRecord}
+                description={unableToFetchRecordDescription}
             />
         );
     }
@@ -36,8 +40,6 @@ export const AddCommentsView = (): JSX.Element => {
         );
     }
 
-    const { addCommentToLabel, entityName } = comments;
-
     return (
         <PageAnnouncementProvider sessionKey="addComment">
             <PageAnnouncement />
@@ -49,21 +51,14 @@ export const AddCommentsView = (): JSX.Element => {
                             to={`/${type}/${id}`}
                             variant="back-link"
                         >
-                            {locale.backLinkLabel(entityData)}
+                            {backLinkLabel(entityData)}
                         </Link>
-                        <h2 className="lbh-heading-h2">{comments.heading}</h2>
-                        <h3 className="add-comment-person govuk-label lbh-label">
-                            {addCommentToLabel}{' '}
-                            <b data-testid="titleName">
-                                {entityName(entityData)}
-                            </b>
-                            :
-                        </h3>
+                        <h2 className="lbh-heading-h2">{heading}</h2>
                     </>
                 }
                 data-testid="add-comment"
             >
-                Add comment
+                <AddCommentForm entityName={entityName(entityData)} />
             </Layout>
         </PageAnnouncementProvider>
     );
