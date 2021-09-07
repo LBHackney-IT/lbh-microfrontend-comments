@@ -10,15 +10,15 @@ import {
     Spinner,
 } from '@mtfh/common';
 
-import { locale, usePerson } from '../../services';
+import { locale, useEntity } from '../../services';
 import { AddCommentForm } from '../../components';
 
 const { backLinkLabel, comments, errors } = locale;
 
 export const AddCommentsView = (): JSX.Element => {
     const { type, id } = useParams<{ type: string; id: string }>();
-    const { data: entityData, error } = usePerson(id);
 
+    const { data: entityData, error } = useEntity(id, type);
     const { entityName, heading } = comments;
     const { unableToFetchRecord, unableToFetchRecordDescription } = errors;
 
@@ -51,14 +51,14 @@ export const AddCommentsView = (): JSX.Element => {
                             to={`/${type}/${id}`}
                             variant="back-link"
                         >
-                            {backLinkLabel(entityData)}
+                            {backLinkLabel(type, entityData)}
                         </Link>
                         <h2 className="lbh-heading-h2">{heading}</h2>
                     </>
                 }
                 data-testid="add-comment"
             >
-                <AddCommentForm entityName={entityName(entityData)} />
+                <AddCommentForm entityName={entityName(type, entityData)} />
             </Layout>
         </PageAnnouncementProvider>
     );

@@ -1,15 +1,24 @@
-import { Person } from '../types';
+import { Person, Tenure } from '../types';
 
 const locale = {
-    backLinkLabel: (entityData: Person) => {
+    backLinkLabel: (type: string, entityData: any) => {
         if (!entityData) return 'Back';
-        return `${entityData.firstName} ${entityData.surname}`;
+        let label = '';
+        switch (type) {
+            case 'tenure':
+                label = `Tenure payment ref: ${entityData.paymentReference}`;
+                break;
+            case 'person':
+                label = `${entityData.firstName} ${entityData.surname}`;
+                break;
+        }
+        return label;
     },
     comments: {
         heading: 'Add comment',
         addCommentToLabel: 'Add comment to',
-        entityName: (entityData: Person) => {
-            return `${locale.backLinkLabel(entityData)}`;
+        entityName: (type: string, entityData: Person) => {
+            return `${locale.backLinkLabel(type, entityData)}`;
         },
         saveComment: 'Save comment',
         submittingComment: 'Submitting...',

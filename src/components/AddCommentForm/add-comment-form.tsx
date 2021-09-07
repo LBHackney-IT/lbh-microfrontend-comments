@@ -144,7 +144,7 @@ export const AddCommentForm = ({
                     </FormGroup>
                     <Button
                         type="submit"
-                        isLoading={false}
+                        isLoading={formik.isSubmitting}
                         loadingText={comments.submittingComment}
                     >
                         {comments.saveComment}
