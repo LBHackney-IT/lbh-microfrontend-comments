@@ -9,28 +9,6 @@ const headers = {
     'Authorization': `Bearer ${$auth.getValue().token}`,
 };
 
-export const usePerson = (id: string): AxiosSWRResponse<Person> => {
-    return useAxiosSWR<Person>(`${config.personApiUrl}/persons/${id}`);
-};
-
-export const useEntity = (id: string, type: string): any => {
-    let response;
-    switch (type) {
-        case 'tenure':
-            response = useAxiosSWR<Tenure>(
-                `${config.tenureApiUrl}/tenures/${id}`
-            );
-            break;
-        case 'person':
-            response = useAxiosSWR<Person>(
-                `${config.personApiUrl}/persons/${id}`
-            );
-            break;
-    }
-
-    return response;
-};
-
 export const getPersonById = async ({
     id,
     options = {},
