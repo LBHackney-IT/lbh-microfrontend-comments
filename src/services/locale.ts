@@ -17,7 +17,7 @@ const locale = {
     comments: {
         heading: 'Add comment',
         addCommentToLabel: 'Add comment to',
-        entityName: (type: string, entityData: Person) => {
+        entityName: (type: string, entityData: any) => {
             return `${locale.backLinkLabel(type, entityData)}`;
         },
         saveComment: 'Save comment',

@@ -1,4 +1,4 @@
-import { Person } from '../types';
+import { Person, Tenure } from '../types';
 import { Comment } from '../services';
 
 export const mockComment: Comment = {
@@ -50,4 +50,23 @@ export const mockPerson: Person = {
             endpointType: 'GET',
         },
     ],
+};
+
+export const mockTenure = {
+    id: '9833a771-b89a-dbb7-fe50-91b8fcc873cc',
+    paymentReference: '9148415610',
+    propertyReference: 'prop-ref',
+    tenuredAsset: {
+        id: '56b6a112-400c-f3c3-579e-e4bb9c4846cb',
+        type: 'Dwelling',
+        fullAddress: '27 BOUNDARY HOUSE  Boundary Lane AL7 4EH',
+        uprn: '100081148415',
+    },
+    startOfTenureDate: '2019-07-17T00:00:00',
+    endOfTenureDate: null,
+    tenureType: {
+        code: 'TLA',
+        description: 'Temp Annex',
+    },
+    isActive: true,
 };

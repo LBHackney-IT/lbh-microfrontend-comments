@@ -122,7 +122,7 @@ export const AddCommentForm = ({
             )}
             <h3 className="add-comment-person govuk-label lbh-label">
                 {comments.addCommentToLabel}{' '}
-                <b data-testid="titleName">{entityName}</b>:
+                <b data-testid="entity-name">{entityName}</b>:
             </h3>
             <Formik {...formik} onSubmit={handleSubmitForm}>
                 <Form id="add-comment-form">

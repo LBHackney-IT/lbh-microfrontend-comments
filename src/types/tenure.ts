@@ -11,7 +11,7 @@ export enum AssetType {
 
 export interface TenureAsset {
     id: string;
-    type: AssetType;
+    type: 'Dwelling' | 'Garage';
     fullAddress: string;
     uprn: string;
 }
@@ -26,7 +26,7 @@ export interface Tenure {
     paymentReference: string;
     propertyReference: string;
     startOfTenureDate: string;
-    endOfTenureDate: string;
+    endOfTenureDate: string | null;
     isActive: boolean;
     tenureType: TenureType;
     tenuredAsset: TenureAsset;

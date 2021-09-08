@@ -1,12 +1,12 @@
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import React from 'react';
-import { hasToggle } from '@mtfh/common';
+import { useFeatureToggle } from '@mtfh/common';
 import './root.styles.scss';
 import { AddCommentFormLegacy } from '@components';
 import { AddCommentsView } from './views/add-comments-view';
 
 export default function Root(): JSX.Element {
-    const refactorCommentsToggle = hasToggle('MMH.RefactorComments');
+    const refactorCommentsToggle = useFeatureToggle('MMH.RefactorComments');
     return (
         <Router>
             <Switch>

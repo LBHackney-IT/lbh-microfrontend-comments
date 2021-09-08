@@ -1,8 +1,10 @@
+import { SWRConfig } from 'swr';
 import { Router, Route } from 'react-router-dom';
 import React from 'react';
 import fetch from 'node-fetch';
 import { createMemoryHistory, MemoryHistory } from 'history';
 import { render, RenderResult } from '@testing-library/react';
+import { queries } from '@mtfh/common';
 import { server } from './mocks';
 
 Object.defineProperty(global, 'fetch', {
@@ -41,4 +43,40 @@ export const customRender = (
         ...utils,
         history,
     };
+};
+
+interface RouteRenderConfig {
+    url: string;
+    path: string;
+    query: keyof typeof queries;
+}
+
+export const routeRender = (
+    component: JSX.Element,
+    options?: Partial<RouteRenderConfig>
+): [RenderResult, MemoryHistory] => {
+    const config: RouteRenderConfig = {
+        url: `/comment/person/123`,
+        path: '/comment/:targetType/:entityId',
+        query: 'lg',
+        ...options,
+    };
+    const history = createMemoryHistory();
+    history.push(config.url);
+    return [
+        render(
+            <SWRConfig
+                value={{
+                    provider: () => new Map(),
+                    dedupingInterval: 0,
+                    errorRetryInterval: 0,
+                }}
+            >
+                <Router history={history}>
+                    <Route path={config.path}>{component}</Route>
+                </Router>
+            </SWRConfig>
+        ),
+        history,
+    ];
 };
