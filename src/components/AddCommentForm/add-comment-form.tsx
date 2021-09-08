@@ -50,6 +50,7 @@ export const AddCommentForm = ({
                 if (error instanceof ResponseException) {
                     switch (error.status) {
                         case 400:
+                        case 404:
                             // formik.setErrors(error.payload.errors);
                             return setError('invalid');
                         default:
@@ -140,6 +141,7 @@ export const AddCommentForm = ({
                             maxLength={500}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
+                            value={formik.values.description}
                         />
                     </FormGroup>
                     <Button
