@@ -1,5 +1,5 @@
 import { rest } from 'msw';
-import { addComment } from './comments';
+import { addComment } from './comments-legacy';
 import { config } from '../config';
 import { server, mockComment } from '../../mocks';
 
