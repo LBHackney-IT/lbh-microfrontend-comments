@@ -1,17 +1,26 @@
 import { useParams, Link as RouterLink } from 'react-router-dom';
 import React from 'react';
-import { Center, ErrorSummary, Layout, Link, Spinner } from '@mtfh/common';
+import {
+    Center,
+    ErrorSummary,
+    Layout,
+    Link,
+    PageAnnouncement,
+    PageAnnouncementProvider,
+    Spinner,
+} from '@mtfh/common';
 
 import { locale, useTenure } from '../../services';
 import { AddCommentForm } from '../../components';
+import { AddCommentsView } from '../';
 
-const { backLinkLabel, comments, errors } = locale;
+const { comments, errors, tenureName } = locale;
 
 export const AddCommentsToTenureView = (): JSX.Element => {
-    const { type, id } = useParams<{ type: string; id: string }>();
+    const { id } = useParams<{ id: string }>();
 
     const { data: tenureData, error } = useTenure(id);
-    const { entityName, heading } = comments;
+    const { heading } = comments;
     const { unableToFetchRecord, unableToFetchRecordDescription } = errors;
 
     if (error) {
@@ -32,24 +41,33 @@ export const AddCommentsToTenureView = (): JSX.Element => {
         );
     }
 
+    const targetName = tenureName(tenureData);
+    const targetType = 'tenure';
+
     return (
-        <Layout
-            top={
-                <>
-                    <Link
-                        as={RouterLink}
-                        to={`/${type}/${id}`}
-                        variant="back-link"
-                        data-testid="backButton"
-                    >
-                        {backLinkLabel(type, tenureData)}
-                    </Link>
-                    <h2 className="lbh-heading-h2">{heading}</h2>
-                </>
-            }
-            data-testid="add-comment-to-tenure"
-        >
-            <AddCommentForm entityName={entityName(type, tenureData)} />
-        </Layout>
+        <PageAnnouncementProvider sessionKey="addComment">
+            <PageAnnouncement />
+            <Layout
+                top={
+                    <>
+                        <Link
+                            as={RouterLink}
+                            to={`/${targetType}/${id}`}
+                            variant="back-link"
+                            data-testid="backButton"
+                        >
+                            {targetName}
+                        </Link>
+                        <h2 className="lbh-heading-h2">{heading}</h2>
+                    </>
+                }
+                data-testid="add-comment-to-tenure"
+            >
+                <AddCommentsView
+                    targetName={targetName}
+                    targetType={targetType}
+                />
+            </Layout>
+        </PageAnnouncementProvider>
     );
 };

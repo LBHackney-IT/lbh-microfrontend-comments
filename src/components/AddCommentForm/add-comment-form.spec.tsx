@@ -5,16 +5,18 @@ import { fireEvent, screen, waitFor } from '@testing-library/react';
 
 import { config, locale } from '@services';
 import { AddCommentForm } from './add-comment-form';
-import { customRender, routeRender } from '../../test-utils';
+import { routeRender } from '../../test-utils';
 import { server } from '../../mocks/server';
 import { mockPerson, mockTenure } from '../../mocks';
 
-const { comments } = locale;
-const { entityName } = comments;
+const { personName, tenureName, comments } = locale;
 
 const loadAddCommentToPersonForm = async (id?: string) => {
     const utils = routeRender(
-        <AddCommentForm entityName={entityName('person', mockPerson)} />
+        <AddCommentForm
+            entityName={personName(mockPerson)}
+            targetType="person"
+        />
     );
     await waitFor(() => {
         expect(screen.getByText('Save comment')).toBeInTheDocument();
@@ -28,7 +30,10 @@ const loadAddCommentToPersonForm = async (id?: string) => {
 
 const loadAddCommentToTenureForm = async (id?: string) => {
     const utils = routeRender(
-        <AddCommentForm entityName={entityName('tenure', mockTenure)} />
+        <AddCommentForm
+            entityName={tenureName(mockTenure)}
+            targetType="tenure"
+        />
     );
     await waitFor(() => {
         expect(screen.getByText('Save comment')).toBeInTheDocument();

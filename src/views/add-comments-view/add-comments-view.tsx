@@ -1,27 +1,18 @@
-import { useParams } from 'react-router-dom';
-import React, { useMemo } from 'react';
-import { PageAnnouncement, PageAnnouncementProvider } from '@mtfh/common';
+import React from 'react';
+import { AddCommentForm } from '../../components';
 
-import { AddCommentsToPersonView, AddCommentsToTenureView } from '../';
+export interface AddCommentViewProperties {
+    targetName: string;
+    targetType: 'person' | 'tenure';
+}
 
-export const AddCommentsView = (): JSX.Element => {
-    const { type, id } = useParams<{ type: string; id: string }>();
-
-    const addCommentsForm = useMemo(() => {
-        switch (type) {
-            case 'person':
-                return <AddCommentsToPersonView />;
-            case 'tenure':
-                return <AddCommentsToTenureView />;
-            default:
-                return null;
-        }
-    }, []);
-
+export const AddCommentsView = ({
+    targetName,
+    targetType,
+}: AddCommentViewProperties): JSX.Element => {
     return (
-        <PageAnnouncementProvider sessionKey="addComment">
-            <PageAnnouncement />
-            {addCommentsForm}
-        </PageAnnouncementProvider>
+        <div data-testid="add-comment-view">
+            <AddCommentForm entityName={targetName} targetType={targetType} />
+        </div>
     );
 };

@@ -12,17 +12,19 @@ export type AddCommentFormError = 'error' | 'invalid';
 
 export interface AddCommentUrlParameters {
     id: string;
-    type: 'person' | 'tenure' | 'asset' | 'repair';
+    // type: 'person' | 'tenure' | 'asset' | 'repair';
 }
 
 export interface AddCommentFormProperties {
     entityName: string;
+    targetType: 'person' | 'tenure';
 }
 
 export const AddCommentForm = ({
     entityName,
+    targetType,
 }: AddCommentFormProperties): JSX.Element => {
-    const { type, id } = useParams<AddCommentUrlParameters>();
+    const { id } = useParams<AddCommentUrlParameters>();
     const [error, setError] = useState<AddCommentFormError | undefined>();
     const controller = useRef(new AbortController());
     const [success, setSuccess] = useState(false);
@@ -37,7 +39,7 @@ export const AddCommentForm = ({
             try {
                 await addComment({
                     ...values,
-                    targetType: type,
+                    targetType,
                     targetId: id,
                     options: {
                         signal: controller.current.signal,

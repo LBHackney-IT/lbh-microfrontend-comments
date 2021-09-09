@@ -14,12 +14,15 @@ const locale = {
         }
         return label;
     },
+    personName: (person: Person) => {
+        return `${person.firstName} ${person.surname}`;
+    },
+    tenureName: (tenure: any) => {
+        return `Tenure payment ref: ${tenure.paymentReference}`;
+    },
     comments: {
         heading: 'Add comment',
         addCommentToLabel: 'Add comment to',
-        entityName: (type: string, entityData: any) => {
-            return `${locale.backLinkLabel(type, entityData)}`;
-        },
         saveComment: 'Save comment',
         submittingComment: 'Submitting...',
         commentSuccesfullySavedLabel: 'Comment successfully saved',
