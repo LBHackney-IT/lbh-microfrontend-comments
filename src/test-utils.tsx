@@ -2,6 +2,7 @@ import { SWRConfig } from 'swr';
 import { Router, Route } from 'react-router-dom';
 import React from 'react';
 import fetch from 'node-fetch';
+import { rest } from 'msw';
 import { createMemoryHistory, MemoryHistory } from 'history';
 import { render, RenderResult } from '@testing-library/react';
 import { queries } from '@mtfh/common';
@@ -79,4 +80,20 @@ export const routeRender = (
         ),
         history,
     ];
+};
+
+export const get = (path: string, data: unknown, code = 200): void => {
+    server.use(
+        rest.get(path, (request, response, context) => {
+            return response(context.status(code), context.json(data));
+        })
+    );
+};
+
+export const post = (path: string, data: unknown, code = 200): void => {
+    server.use(
+        rest.post(path, (request, response, context) => {
+            return response(context.status(code), context.json(data));
+        })
+    );
 };
