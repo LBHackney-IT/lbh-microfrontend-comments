@@ -5,7 +5,6 @@ import { Button, ErrorSummary } from '@mtfh/common';
 import { ResponseException } from '../../utils';
 import { newComment, locale } from '../../services';
 import {
-    AddCommentForm,
     CommentsFormData,
     commentsSchema,
     NewCommentForm,
@@ -28,16 +27,6 @@ export const AddCommentsView = ({
     targetName,
     targetType,
 }: AddCommentViewProperties): JSX.Element => {
-    // return (
-    //     <div data-testid="add-comment-view">
-    //         <h3 className="add-comment-person govuk-label lbh-label">
-    //             {comments.addCommentToLabel}{' '}
-    //             <b data-testid="entity-name">{targetName}</b>:
-    //         </h3>
-    //         <AddCommentForm entityName={targetName} targetType={targetType} />
-    //     </div>
-    // );
-
     const { id } = useParams<AddCommentUrlParameters>();
     const [error, setError] = useState<AddCommentFormError | undefined>();
     const controller = useRef(new AbortController());
@@ -48,8 +37,6 @@ export const AddCommentsView = ({
             initialValues={{
                 description: '',
             }}
-            validateOnBlur={false}
-            validateOnChange={false}
             validationSchema={commentsSchema}
             onSubmit={async (values, { setErrors, resetForm }) => {
                 setError(undefined);
@@ -82,6 +69,7 @@ export const AddCommentsView = ({
             {properties => {
                 const hasFieldErrors =
                     Object.keys(properties.errors).length > 0;
+
                 return (
                     <Form id="add-comment-form">
                         {success ? (

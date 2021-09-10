@@ -8,7 +8,7 @@ interface AddCommentsFormProperties {
 }
 
 export const NewCommentForm = ({
-    formik: { handleChange, handleBlur, values, setValues, touched, errors },
+    formik: { handleChange, handleBlur, values, touched, errors },
 }: AddCommentsFormProperties): JSX.Element => {
     return (
         <FormGroup
