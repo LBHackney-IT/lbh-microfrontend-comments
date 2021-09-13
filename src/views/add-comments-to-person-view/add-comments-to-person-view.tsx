@@ -11,7 +11,6 @@ import {
 } from '@mtfh/common';
 
 import { locale, usePerson } from '../../services';
-import { AddCommentForm } from '../../components';
 import { AddCommentsView } from '../';
 
 const { comments, errors, personName } = locale;

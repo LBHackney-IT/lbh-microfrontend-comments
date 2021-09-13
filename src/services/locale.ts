@@ -1,19 +1,6 @@
 import { Person, Tenure } from '../types';
 
 const locale = {
-    backLinkLabel: (type: string, entityData: any) => {
-        if (!entityData) return 'Back';
-        let label = '';
-        switch (type) {
-            case 'tenure':
-                label = `Tenure payment ref: ${entityData.paymentReference}`;
-                break;
-            case 'person':
-                label = `${entityData.firstName} ${entityData.surname}`;
-                break;
-        }
-        return label;
-    },
     personName: (person: Person) => {
         return `${person.firstName} ${person.surname}`;
     },
