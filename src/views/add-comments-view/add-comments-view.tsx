@@ -7,7 +7,7 @@ import { addComment, locale } from '../../services';
 import {
     CommentsFormData,
     commentsSchema,
-    NewCommentForm,
+    AddCommentForm,
 } from '../../components';
 
 const { comments, errors } = locale;
@@ -118,7 +118,7 @@ export const AddCommentsView = ({
                             {comments.addCommentToLabel}{' '}
                             <b data-testid="entity-name">{targetName}</b>:
                         </h3>
-                        <NewCommentForm formik={properties} />
+                        <AddCommentForm formik={properties} />
 
                         <Button
                             type="submit"

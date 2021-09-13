@@ -1,2 +1,2 @@
-export * from './new-comment-form';
+export * from './add-comment-form';
 export { CommentsFormData, commentsSchema } from './schema';
