@@ -57,7 +57,7 @@ export const AddCommentsView = ({
                         switch (error.status) {
                             case 400:
                             case 404:
-                                // formik.setErrors(error.payload.errors);
+                                setErrors(error.payload.errors);
                                 return setError('invalid');
                             default:
                                 return setError('error');

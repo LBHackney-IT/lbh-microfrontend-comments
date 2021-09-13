@@ -1,12 +1,10 @@
 import React from 'react';
-import { rest } from 'msw';
 import userEvent from '@testing-library/user-event';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 
-import { config, locale } from '@services';
+import { locale } from '@services';
 import { AddCommentsView } from './add-comments-view';
-import { routeRender } from '../../test-utils';
-import { server } from '../../mocks/server';
+import { post, routeRender } from '../../test-utils';
 import { mockPerson, mockTenure } from '../../mocks';
 
 const { personName, tenureName, comments } = locale;
@@ -112,3 +110,41 @@ test('it validates the form onBlur for tenure entity', async () => {
         ).toBeInTheDocument()
     );
 });
+
+test('it validates the form onBlur for tenure entity', async () => {
+    await loadAddCommentToTenureForm();
+    const input = screen.getByLabelText(
+        /Comment description/
+    ) as HTMLTextAreaElement;
+    userEvent.type(input, 'This is a comment');
+    fireEvent.change(input, { target: { value: '' } });
+    fireEvent.blur(input);
+    await waitFor(() =>
+        expect(
+            screen.getByText('Please enter a description for the comment')
+        ).toBeInTheDocument()
+    );
+});
+
+// test('it shows error if post request for add new comment fails', async () => {
+//     post('/api/v1/notes', 'error', 404);
+//     routeRender(
+//         <AddCommentsView
+//             targetName={personName(mockPerson)}
+//             targetType="person"
+//         />
+//     );
+//     const input = screen.getByLabelText(
+//         /Comment description/
+//     ) as HTMLTextAreaElement;
+//     userEvent.type(input, 'This is a comment');
+//     fireEvent.change(input, { target: { value: '' } });
+//     fireEvent.blur(input);
+
+//     await waitFor(() =>
+//         expect(
+//             screen.getByText('Error')
+//         ).toBeInTheDocument()
+//     );
+
+// });
