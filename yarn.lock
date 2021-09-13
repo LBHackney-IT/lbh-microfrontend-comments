@@ -1331,12 +1331,11 @@
 
 "@mtfh/common@https://github.com/LBHackney-IT/mtfh-common.git":
   version "0.0.1"
-  resolved "https://github.com/LBHackney-IT/mtfh-common.git#a41e96d750bd4d9642ff6f8a405f252a6d595815"
+  resolved "https://github.com/LBHackney-IT/mtfh-common.git#d0de63c68f55fb9b2e418c08aed95f73dce3ee35"
   dependencies:
     "@babel/preset-react" "^7.13.13"
     "@radix-ui/react-polymorphic" "^0.0.12"
     "@reach/dialog" "^0.15.0"
-    "@types/jest" "^26.0.16"
     "@types/js-cookie" "^2.2.6"
     "@types/react" "^17.0.5"
     "@types/react-dom" "^17.0.5"
