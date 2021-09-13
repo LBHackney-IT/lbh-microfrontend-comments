@@ -44,7 +44,6 @@ export const AddCommentsToTenureView = (): JSX.Element => {
 
     return (
         <PageAnnouncementProvider sessionKey="addComment">
-            <PageAnnouncement />
             <Layout
                 top={
                     <>

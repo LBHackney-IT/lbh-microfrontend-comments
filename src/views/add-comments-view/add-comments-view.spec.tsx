@@ -1,7 +1,7 @@
 import React from 'react';
 import userEvent from '@testing-library/user-event';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
-
+import { PageAnnouncementProvider } from '@mtfh/common';
 import { locale } from '@services';
 import { AddCommentsView } from './add-comments-view';
 import { post, routeRender } from '../../test-utils';
@@ -11,10 +11,12 @@ const { personName, tenureName, comments } = locale;
 
 const loadAddCommentToPersonForm = async (id?: string) => {
     const utils = routeRender(
-        <AddCommentsView
-            targetName={personName(mockPerson)}
-            targetType="person"
-        />
+        <PageAnnouncementProvider sessionKey="addComment">
+            <AddCommentsView
+                targetName={personName(mockPerson)}
+                targetType="person"
+            />
+        </PageAnnouncementProvider>
     );
     await waitFor(() => {
         expect(screen.getByText('Save comment')).toBeInTheDocument();
@@ -28,10 +30,12 @@ const loadAddCommentToPersonForm = async (id?: string) => {
 
 const loadAddCommentToTenureForm = async (id?: string) => {
     const utils = routeRender(
-        <AddCommentsView
-            targetName={tenureName(mockTenure)}
-            targetType="tenure"
-        />
+        <PageAnnouncementProvider sessionKey="addComment">
+            <AddCommentsView
+                targetName={tenureName(mockTenure)}
+                targetType="tenure"
+            />
+        </PageAnnouncementProvider>
     );
     await waitFor(() => {
         expect(screen.getByText('Save comment')).toBeInTheDocument();

@@ -1,8 +1,12 @@
 import { useParams, Link as RouterLink } from 'react-router-dom';
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { Formik, Form } from 'formik';
-import { Button, ErrorSummary } from '@mtfh/common';
-import { ResponseException } from '../../utils';
+import {
+    Button,
+    PageAnnouncement,
+    ErrorSummary,
+    usePageAnnouncement,
+} from '@mtfh/common';
 import { addComment, locale } from '../../services';
 import {
     CommentsFormData,
@@ -28,8 +32,8 @@ export const AddCommentsView = ({
 }: AddCommentViewProperties): JSX.Element => {
     const { id } = useParams<AddCommentUrlParameters>();
     const [error, setError] = useState<AddCommentFormError | undefined>();
-    const controller = useRef(new AbortController());
-    const [success, setSuccess] = useState(false);
+
+    const { addAnnouncement, clearAnnouncement } = usePageAnnouncement();
 
     return (
         <Formik<CommentsFormData>
@@ -44,15 +48,17 @@ export const AddCommentsView = ({
                         ...values,
                         targetType,
                         targetId: id,
-                        options: {
-                            signal: controller.current.signal,
-                        },
                     });
                     resetForm();
-                    setSuccess(true);
-                } catch (error) {
-                    setSuccess(false);
-                    if (error instanceof ResponseException) {
+                    addAnnouncement({
+                        heading: comments.commentSuccesfullySavedLabel,
+                    });
+                } catch (error: any) {
+                    clearAnnouncement();
+                    if (
+                        typeof error === 'object' &&
+                        error.isAxiosError === true
+                    ) {
                         switch (error.status) {
                             case 400:
                             case 404:
@@ -71,47 +77,34 @@ export const AddCommentsView = ({
 
                 return (
                     <Form id="add-comment-form">
-                        {success ? (
-                            <section
-                                className="lbh-page-announcement"
+                        <PageAnnouncement />
+                        {(hasFieldErrors || error) && (
+                            <div
+                                className="govuk-error-summary optional-extra-class lbh-error-summary"
+                                aria-labelledby="add-comment-error"
                                 role="alert"
-                                data-testid="addComment-success"
+                                tabIndex={-1}
+                                data-testid="addComment-error"
                             >
-                                <h3 className="lbh-page-announcement__title">
-                                    {comments.commentSuccesfullySavedLabel}
-                                </h3>
-                            </section>
-                        ) : (
-                            (hasFieldErrors || error) && (
-                                <div
-                                    className="govuk-error-summary optional-extra-class lbh-error-summary"
-                                    aria-labelledby="add-comment-error"
-                                    role="alert"
-                                    tabIndex={-1}
-                                    data-testid="addComment-error"
+                                <h2
+                                    className="govuk-error-summary__title"
+                                    id="add-comment-error"
                                 >
-                                    <h2
-                                        className="govuk-error-summary__title"
-                                        id="add-comment-error"
-                                    >
-                                        {errors.errorLabel}
-                                    </h2>
-                                    <div className="govuk-error-summary__body">
-                                        {hasFieldErrors && (
-                                            <p>
-                                                {
-                                                    errors.pleaseCorrectIndicatedErrorsLabel
-                                                }
-                                            </p>
-                                        )}
-                                        {error && (
-                                            <p>
-                                                {errors.somethingWentWrongLabel}
-                                            </p>
-                                        )}
-                                    </div>
+                                    {errors.errorLabel}
+                                </h2>
+                                <div className="govuk-error-summary__body">
+                                    {hasFieldErrors && (
+                                        <p>
+                                            {
+                                                errors.pleaseCorrectIndicatedErrorsLabel
+                                            }
+                                        </p>
+                                    )}
+                                    {error && (
+                                        <p>{errors.somethingWentWrongLabel}</p>
+                                    )}
                                 </div>
-                            )
+                            </div>
                         )}
 
                         <h3 className="add-comment-person govuk-label lbh-label">

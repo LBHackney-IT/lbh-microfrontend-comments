@@ -5,7 +5,6 @@ import {
     ErrorSummary,
     Layout,
     Link,
-    PageAnnouncement,
     PageAnnouncementProvider,
     Spinner,
 } from '@mtfh/common';
@@ -44,7 +43,6 @@ export const AddCommentsToPersonView = (): JSX.Element => {
 
     return (
         <PageAnnouncementProvider sessionKey="addComment">
-            <PageAnnouncement />
             <Layout
                 top={
                     <>
