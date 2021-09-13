@@ -14,13 +14,13 @@ import { locale, usePerson } from '../../services';
 import { AddCommentsView } from '../';
 
 const { comments, errors, personName } = locale;
+const { heading } = comments;
+const { unableToFetchRecord, unableToFetchRecordDescription } = errors;
 
 export const AddCommentsToPersonView = (): JSX.Element => {
     const { id } = useParams<{ id: string }>();
 
     const { data: personData, error } = usePerson(id);
-    const { heading } = comments;
-    const { unableToFetchRecord, unableToFetchRecordDescription } = errors;
 
     if (error) {
         return (
@@ -41,7 +41,6 @@ export const AddCommentsToPersonView = (): JSX.Element => {
     }
 
     const targetName = personName(personData);
-    const targetType = 'person';
 
     return (
         <PageAnnouncementProvider sessionKey="addComment">
@@ -62,10 +61,7 @@ export const AddCommentsToPersonView = (): JSX.Element => {
                 }
                 data-testid="add-comment-to-person"
             >
-                <AddCommentsView
-                    targetName={targetName}
-                    targetType={targetType}
-                />
+                <AddCommentsView targetName={targetName} targetType="person" />
             </Layout>
         </PageAnnouncementProvider>
     );

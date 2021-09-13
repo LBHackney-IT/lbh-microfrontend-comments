@@ -23,7 +23,6 @@ test('it renders add comments to person view correctly', async () => {
 });
 
 test('it shows invalid state if the fetching person returns 400', async () => {
-    window.HTMLElement.prototype.scrollIntoView = function () {};
     get(`${config.personApiUrl}/persons/:id`, { message: 'failure' }, 400);
     routeRender(<AddCommentsToPersonView />, {
         url: `/comment/person/${mockPerson.id}`,
@@ -37,8 +36,6 @@ test('it shows invalid state if the fetching person returns 400', async () => {
 });
 
 test('it shows an error state if the fetching person returns 500', async () => {
-    window.HTMLElement.prototype.scrollIntoView = function () {};
-
     get(`${config.personApiUrl}/persons/:id`, { message: 'failure' }, 500);
     routeRender(<AddCommentsToPersonView />, {
         url: `/comment/person/${mockPerson.id}`,

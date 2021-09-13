@@ -14,13 +14,13 @@ import { locale, useTenure } from '../../services';
 import { AddCommentsView } from '../';
 
 const { comments, errors, tenureName } = locale;
+const { heading } = comments;
+const { unableToFetchRecord, unableToFetchRecordDescription } = errors;
 
 export const AddCommentsToTenureView = (): JSX.Element => {
     const { id } = useParams<{ id: string }>();
 
     const { data: tenureData, error } = useTenure(id);
-    const { heading } = comments;
-    const { unableToFetchRecord, unableToFetchRecordDescription } = errors;
 
     if (error) {
         return (
@@ -41,7 +41,6 @@ export const AddCommentsToTenureView = (): JSX.Element => {
     }
 
     const targetName = tenureName(tenureData);
-    const targetType = 'tenure';
 
     return (
         <PageAnnouncementProvider sessionKey="addComment">
@@ -51,7 +50,7 @@ export const AddCommentsToTenureView = (): JSX.Element => {
                     <>
                         <Link
                             as={RouterLink}
-                            to={`/${targetType}/${id}`}
+                            to={`/tenure/${id}`}
                             variant="back-link"
                             data-testid="backButton"
                         >
@@ -62,10 +61,7 @@ export const AddCommentsToTenureView = (): JSX.Element => {
                 }
                 data-testid="add-comment-to-tenure"
             >
-                <AddCommentsView
-                    targetName={targetName}
-                    targetType={targetType}
-                />
+                <AddCommentsView targetName={targetName} targetType="tenure" />
             </Layout>
         </PageAnnouncementProvider>
     );

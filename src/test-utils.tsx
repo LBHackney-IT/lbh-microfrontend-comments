@@ -97,3 +97,5 @@ export const post = (path: string, data: unknown, code = 200): void => {
         })
     );
 };
+
+window.HTMLElement.prototype.scrollIntoView = jest.fn();
