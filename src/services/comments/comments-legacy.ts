@@ -9,7 +9,7 @@ const headers = {
     'Authorization': `Bearer ${$auth.getValue().token}`,
 };
 
-export const addComment = async ({
+export const addCommentLegacy = async ({
     options = {},
     ...data
 }: AddCommentRequestData): Promise<Comment> => {

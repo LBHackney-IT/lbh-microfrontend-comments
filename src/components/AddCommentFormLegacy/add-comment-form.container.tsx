@@ -3,7 +3,7 @@ import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useFormik } from 'formik';
 
 import { ResponseException } from '@utilities';
-import { addComment, getPersonById } from '@services';
+import { addCommentLegacy, getPersonById } from '@services';
 import {
     AddCommentUrlParameters,
     FetchState,
@@ -57,7 +57,7 @@ export function AddCommentFormContainer(): JSX.Element {
         onSubmit: async values => {
             setGlobalError(undefined);
             try {
-                await addComment({
+                await addCommentLegacy({
                     ...values,
                     targetType: type,
                     targetId: id,
