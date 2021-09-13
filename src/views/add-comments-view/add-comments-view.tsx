@@ -3,7 +3,7 @@ import React, { useRef, useState } from 'react';
 import { Formik, Form } from 'formik';
 import { Button, ErrorSummary } from '@mtfh/common';
 import { ResponseException } from '../../utils';
-import { newComment, locale } from '../../services';
+import { addComment, locale } from '../../services';
 import {
     CommentsFormData,
     commentsSchema,
@@ -20,7 +20,6 @@ export type AddCommentFormError = 'error' | 'invalid';
 
 export interface AddCommentUrlParameters {
     id: string;
-    // type: 'person' | 'tenure' | 'asset' | 'repair';
 }
 
 export const AddCommentsView = ({
@@ -41,7 +40,7 @@ export const AddCommentsView = ({
             onSubmit={async (values, { setErrors, resetForm }) => {
                 setError(undefined);
                 try {
-                    await newComment({
+                    await addComment({
                         ...values,
                         targetType,
                         targetId: id,

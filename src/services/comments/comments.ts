@@ -2,7 +2,7 @@ import { $auth, axiosInstance } from '@mtfh/common';
 import { config } from '../config';
 import { AddCommentRequestData, Comment } from '../../types';
 
-export const newComment = async (
+export const addComment = async (
     data: AddCommentRequestData
 ): Promise<Comment> => {
     const auth = $auth.getValue();
