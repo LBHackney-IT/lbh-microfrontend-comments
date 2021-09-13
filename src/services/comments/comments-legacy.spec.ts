@@ -1,10 +1,10 @@
 import { rest } from 'msw';
-import { addComment } from './comments';
+import { addCommentLegacy } from './comments-legacy';
 import { config } from '../config';
 import { server, mockComment } from '../../mocks';
 
 test('it returns data on an ok response', async () => {
-    const data = await addComment({
+    const data = await addCommentLegacy({
         description: 'comment',
         targetType: 'person',
         targetId: 'string',
@@ -25,7 +25,7 @@ test('it throws an ResponseException on bad request', async () => {
         })
     );
     await expect(() =>
-        addComment({
+        addCommentLegacy({
             description: 'comment',
             targetType: 'person',
             targetId: 'string',

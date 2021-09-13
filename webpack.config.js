@@ -55,13 +55,14 @@ module.exports = (webpackConfigEnv, argv) => {
             },
             extensions: ['.ts', '.tsx', '.js'],
         },
-        externals: ['@mtfh/common', 'react-router-dom'],
+        externals: ['@mtfh/common', 'react-router-dom', 'formik', 'yup'],
         plugins: [
             new webpack.EnvironmentPlugin({
                 NOTES_API_URL: dotenv.NOTES_API_URL || '',
                 NOTES_API_KEY: dotenv.NOTES_API_KEY || '',
                 PERSON_API_URL: dotenv.PERSON_API_URL || '',
                 PERSON_API_KEY: dotenv.PERSON_API_KEY || '',
+                TENURE_API_URL: dotenv.TENURE_API_URL || '',
             }),
         ],
     });

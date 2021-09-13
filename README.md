@@ -12,6 +12,7 @@ NOTES_API_URL=
 NOTES_API_KEY=
 PERSON_API_KEY=
 PERSON_API_URL=
+TENURE_API_URL=
 ```
 
 The values can be found in the development AWS account in the Parameter Store (eu-west-2).

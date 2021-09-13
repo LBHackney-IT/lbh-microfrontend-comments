@@ -1,5 +1,5 @@
 import { rest } from 'msw';
-import { getPersonById } from './person';
+import { getPersonById } from './person-legacy';
 import { config } from '../config';
 import { server, mockPerson } from '../../mocks';
 
