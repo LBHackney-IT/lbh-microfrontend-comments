@@ -78,21 +78,13 @@ export const AddCommentsView = ({
                 return (
                     <Form id="add-comment-form">
                         <PageAnnouncement />
+
                         {(hasFieldErrors || error) && (
-                            <div
-                                className="govuk-error-summary optional-extra-class lbh-error-summary"
-                                aria-labelledby="add-comment-error"
-                                role="alert"
-                                tabIndex={-1}
-                                data-testid="addComment-error"
+                            <ErrorSummary
+                                id="add-comments-error"
+                                title={errors.errorLabel}
                             >
-                                <h2
-                                    className="govuk-error-summary__title"
-                                    id="add-comment-error"
-                                >
-                                    {errors.errorLabel}
-                                </h2>
-                                <div className="govuk-error-summary__body">
+                                <>
                                     {hasFieldErrors && (
                                         <p>
                                             {
@@ -103,8 +95,8 @@ export const AddCommentsView = ({
                                     {error && (
                                         <p>{errors.somethingWentWrongLabel}</p>
                                     )}
-                                </div>
-                            </div>
+                                </>
+                            </ErrorSummary>
                         )}
 
                         <h3 className="add-comment-person govuk-label lbh-label">
