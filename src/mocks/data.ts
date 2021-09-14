@@ -1,5 +1,4 @@
-import { Person, Tenure } from '../types';
-import { Comment } from '../services';
+import { Comment, Person, Tenure } from '../types';
 
 export const mockComment: Comment = {
     id: 'bbf1e233-7b62-4310-b376-118673d90424',

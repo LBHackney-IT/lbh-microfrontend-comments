@@ -9,8 +9,6 @@ Create a `.env` file in the root of the repo with the following required key-val
 
 ```env
 NOTES_API_URL=
-NOTES_API_KEY=
-PERSON_API_KEY=
 PERSON_API_URL=
 TENURE_API_URL=
 ```
