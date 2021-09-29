@@ -99,10 +99,10 @@ export const AddCommentsView = ({
                             </ErrorSummary>
                         )}
 
-                        <h3 className="add-comment-person govuk-label lbh-label">
+                        <h2 className="add-comment-person govuk-label lbh-label">
                             {comments.addCommentToLabel}{' '}
                             <b data-testid="entity-name">{targetName}</b>:
-                        </h3>
+                        </h2>
                         <AddCommentForm formik={properties} />
 
                         <Button

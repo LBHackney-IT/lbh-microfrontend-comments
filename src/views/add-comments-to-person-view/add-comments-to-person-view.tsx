@@ -54,7 +54,7 @@ export const AddCommentsToPersonView = (): JSX.Element => {
                         >
                             {targetName}
                         </Link>
-                        <h2 className="lbh-heading-h2">{heading}</h2>
+                        <h1 className="lbh-heading-h1">{heading}</h1>
                     </>
                 }
                 data-testid="add-comment-to-person"
