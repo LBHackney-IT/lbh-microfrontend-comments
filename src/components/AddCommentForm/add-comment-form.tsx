@@ -3,6 +3,8 @@ import { FormikProps } from 'formik';
 import { FormGroup, TextArea } from '@mtfh/common';
 import { CommentsFormData } from '.';
 
+import './add-comment-form.styles.scss';
+
 interface AddCommentsFormProperties {
     formik: FormikProps<CommentsFormData>;
 }
