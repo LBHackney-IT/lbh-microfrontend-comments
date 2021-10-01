@@ -39,6 +39,13 @@ export const AddCommentsView = ({
         <Formik<CommentsFormData>
             initialValues={{
                 description: '',
+                title: '',
+                highlight: false,
+                categorisation: {
+                    category: '',
+                    subCategory: '',
+                    description: '',
+                },
             }}
             validationSchema={commentsSchema}
             onSubmit={async (values, { setErrors, resetForm }) => {

@@ -13,6 +13,8 @@ const locale = {
         saveComment: 'Save comment',
         submittingComment: 'Submitting...',
         commentSuccesfullySavedLabel: 'Comment successfully saved',
+        selectCategory: 'Select category',
+        highlightThisComment: 'Highlight this comment',
     },
     errors: {
         errorLabel: 'Error',
