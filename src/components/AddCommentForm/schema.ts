@@ -8,8 +8,8 @@ export const commentsSchema = Yup.object({
     highlight: Yup.boolean(),
     categorisation: Yup.object({
         category: Yup.string().required(),
-        subCategory: Yup.string().required(),
-        description: Yup.string().required(),
+        subCategory: Yup.string().nullable(),
+        description: Yup.string().nullable(),
     }),
 });
 

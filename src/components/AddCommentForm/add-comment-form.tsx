@@ -78,20 +78,24 @@ export const AddCommentForm = ({
             </Field>
             <Field
                 id="add-comment-category"
-                name="category"
+                name="categorisation.category"
                 label="Comment category"
                 required
             >
                 <Select>
                     <option value="">{selectCategory}</option>
                     {categories.map((category, index) => (
-                        <option key={index} value={category.code}>
+                        <option key={index} value={category.value}>
                             {category.value}
                         </option>
                     ))}
                 </Select>
             </Field>
-            <Checkbox id="add-comment-category">
+            <Checkbox
+                onChange={handleChange}
+                id="add-comment-category"
+                name="highlight"
+            >
                 <span className="highlight">{highlightThisComment}</span>
             </Checkbox>
         </>

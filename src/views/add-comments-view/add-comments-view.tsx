@@ -43,8 +43,8 @@ export const AddCommentsView = ({
                 highlight: false,
                 categorisation: {
                     category: '',
-                    subCategory: '',
-                    description: '',
+                    subCategory: null,
+                    description: null,
                 },
             }}
             validationSchema={commentsSchema}
