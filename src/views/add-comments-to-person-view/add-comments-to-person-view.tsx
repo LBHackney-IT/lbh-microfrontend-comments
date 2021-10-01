@@ -7,10 +7,11 @@ import {
     Link,
     PageAnnouncementProvider,
     Spinner,
+    useFeatureToggle,
 } from '@mtfh/common';
 
 import { locale, usePerson } from '../../services';
-import { AddCommentsView } from '../';
+import { AddCommentsView, AddCommentsViewLegacy } from '../';
 
 const { comments, errors, personName } = locale;
 const { heading } = comments;
@@ -18,7 +19,7 @@ const { unableToFetchRecord, unableToFetchRecordDescription } = errors;
 
 export const AddCommentsToPersonView = (): JSX.Element => {
     const { id } = useParams<{ id: string }>();
-
+    const hasEnhancedComments = useFeatureToggle('MMH.EnhancedComments');
     const { data: personData, error } = usePerson(id);
 
     if (error) {
@@ -59,7 +60,17 @@ export const AddCommentsToPersonView = (): JSX.Element => {
                 }
                 data-testid="add-comment-to-person"
             >
-                <AddCommentsView targetName={targetName} targetType="person" />
+                {hasEnhancedComments ? (
+                    <AddCommentsView
+                        targetName={targetName}
+                        targetType="person"
+                    />
+                ) : (
+                    <AddCommentsViewLegacy
+                        targetName={targetName}
+                        targetType="person"
+                    />
+                )}
             </Layout>
         </PageAnnouncementProvider>
     );

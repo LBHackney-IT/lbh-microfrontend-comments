@@ -8,10 +8,11 @@ import {
     PageAnnouncement,
     PageAnnouncementProvider,
     Spinner,
+    useFeatureToggle,
 } from '@mtfh/common';
 
 import { locale, useTenure } from '../../services';
-import { AddCommentsView } from '../';
+import { AddCommentsView, AddCommentsViewLegacy } from '../';
 
 const { comments, errors, tenureName } = locale;
 const { heading } = comments;
@@ -19,6 +20,7 @@ const { unableToFetchRecord, unableToFetchRecordDescription } = errors;
 
 export const AddCommentsToTenureView = (): JSX.Element => {
     const { id } = useParams<{ id: string }>();
+    const hasEnhancedComments = useFeatureToggle('MMH.EnhancedComments');
 
     const { data: tenureData, error } = useTenure(id);
 
@@ -60,7 +62,17 @@ export const AddCommentsToTenureView = (): JSX.Element => {
                 }
                 data-testid="add-comment-to-tenure"
             >
-                <AddCommentsView targetName={targetName} targetType="tenure" />
+                {hasEnhancedComments ? (
+                    <AddCommentsView
+                        targetName={targetName}
+                        targetType="tenure"
+                    />
+                ) : (
+                    <AddCommentsViewLegacy
+                        targetName={targetName}
+                        targetType="tenure"
+                    />
+                )}
             </Layout>
         </PageAnnouncementProvider>
     );
