@@ -1,4 +1,4 @@
-import { Person, Tenure } from '../types';
+import { Person } from '../types';
 
 const locale = {
     personName: (person: Person) => {
@@ -7,14 +7,18 @@ const locale = {
     tenureName: (tenure: any) => {
         return `Tenure payment ref: ${tenure.paymentReference}`;
     },
+    dialog: {
+        title: 'Are you sure you wish to cancel adding this comment?',
+    },
     comments: {
-        heading: 'Add comment',
         addCommentToLabel: 'Add comment to',
-        saveComment: 'Save comment',
-        submittingComment: 'Submitting...',
         commentSuccesfullySavedLabel: 'Comment successfully saved',
-        selectCategory: 'Select category',
+        discardComment: 'Discard comment',
+        heading: 'Add comment',
         highlightThisComment: 'Highlight this comment',
+        saveComment: 'Save comment',
+        selectCategory: 'Select category',
+        submittingComment: 'Submitting...',
     },
     errors: {
         errorLabel: 'Error',

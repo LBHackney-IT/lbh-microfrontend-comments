@@ -49,8 +49,7 @@ export const AddCommentForm = ({
         );
     }
 
-    const { category } = data;
-    const categories = category;
+    const { category: categories } = data;
 
     return (
         <>
@@ -85,7 +84,7 @@ export const AddCommentForm = ({
                 <Select>
                     <option value="">{selectCategory}</option>
                     {categories.map((category, index) => (
-                        <option key={index} value={category.value}>
+                        <option key={index} value={category.code}>
                             {category.value}
                         </option>
                     ))}
