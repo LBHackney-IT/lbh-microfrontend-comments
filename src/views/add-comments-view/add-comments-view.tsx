@@ -1,7 +1,13 @@
 import { useParams, Link as RouterLink, useHistory } from 'react-router-dom';
 import React, { useState } from 'react';
 import { Formik, Form } from 'formik';
-import { Button, PageAnnouncement, ErrorSummary } from '@mtfh/common';
+import {
+    Button,
+    Center,
+    PageAnnouncement,
+    ErrorSummary,
+    Spinner,
+} from '@mtfh/common';
 import { addComment, locale } from '../../services';
 import {
     CommentsFormData,
@@ -12,6 +18,7 @@ import {
 import { Link, DialogPrompt } from '@mtfh/common/lib/components';
 import { Relationship } from 'types/relationships';
 import { ReferenceData } from '@mtfh/common/lib/api/reference-data/v1';
+import { useErrorCodes } from '@mtfh/common/lib/hooks';
 
 const { comments, errors, dialog } = locale;
 
@@ -28,6 +35,10 @@ export interface AddCommentUrlParameters {
     id: string;
 }
 
+interface ErrorMessages {
+    [key: string]: string;
+}
+
 export const AddCommentsView = ({
     targetName,
     targetType,
@@ -39,6 +50,17 @@ export const AddCommentsView = ({
     const [isBlocking, setIsBlocking] = useState(true);
     const history = useHistory();
 
+    const errorMessages = useErrorCodes();
+    if (!errorMessages) {
+        return (
+            <Center>
+                <Spinner />
+            </Center>
+        );
+    }
+
+    const schema = commentsSchema({ errorMessages });
+    const correctIndicatedErrorsText = errorMessages.W1;
     const addComments = async (values: CommentsFormData) => {
         const { relationshipIds = [], ...restOfValues } = values;
         const selectedRelationships = relationships.filter(relationship =>
@@ -72,7 +94,7 @@ export const AddCommentsView = ({
                 }}
                 validateOnChange={false}
                 validateOnBlur={false}
-                validationSchema={commentsSchema}
+                validationSchema={schema}
                 onSubmit={async (values, { setErrors }) => {
                     setError(undefined);
                     try {
@@ -115,11 +137,7 @@ export const AddCommentsView = ({
                                 >
                                     <>
                                         {hasFieldErrors && (
-                                            <p>
-                                                {
-                                                    errors.pleaseCorrectIndicatedErrorsLabel
-                                                }
-                                            </p>
+                                            <p>{correctIndicatedErrorsText}</p>
                                         )}
                                         {error && (
                                             <p>
