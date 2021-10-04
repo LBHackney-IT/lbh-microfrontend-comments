@@ -4,17 +4,22 @@ import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { PageAnnouncementProvider } from '@mtfh/common';
 import { locale } from '@services';
 import { AddCommentsView } from './add-comments-view';
-import { routeRender } from '../../test-utils';
 import { mockPerson, mockTenure } from '../../mocks';
+import { render } from '@hackney/mtfh-test-utils';
 
 const { personName, tenureName } = locale;
 
-const loadAddCommentToPersonForm = async (id?: string) => {
-    const utils = routeRender(
+const loadAddCommentToPersonForm = async () => {
+    const utils = render(
         <PageAnnouncementProvider sessionKey="addComment">
             <AddCommentsView
                 categories={[]}
-                relationships={[]}
+                relationships={[
+                    {
+                        targetId: mockPerson.id,
+                        targetType: 'person',
+                    },
+                ]}
                 targetName={personName(mockPerson)}
                 targetType="person"
             />
@@ -30,16 +35,25 @@ const loadAddCommentToPersonForm = async (id?: string) => {
     return utils;
 };
 
-const loadAddCommentToTenureForm = async (id?: string) => {
-    const utils = routeRender(
+const loadAddCommentToTenureForm = async () => {
+    const utils = render(
         <PageAnnouncementProvider sessionKey="addComment">
             <AddCommentsView
                 categories={[]}
-                relationships={[]}
+                relationships={[
+                    {
+                        targetId: mockTenure.id,
+                        targetType: 'tenure',
+                    },
+                ]}
                 targetName={tenureName(mockTenure)}
                 targetType="tenure"
             />
-        </PageAnnouncementProvider>
+        </PageAnnouncementProvider>,
+        {
+            url: `/comment/tenure/${mockTenure.id}`,
+            path: '/comment/tenure/:id',
+        }
     );
     await waitFor(() => {
         expect(screen.getByText('Save comment')).toBeInTheDocument();
@@ -55,7 +69,7 @@ test('it renders correctly with person details', async () => {
     await loadAddCommentToPersonForm();
 });
 
-test('it renders correctly with person details', async () => {
+test.only('it renders correctly with person details', async () => {
     await loadAddCommentToTenureForm();
 });
 
@@ -136,7 +150,7 @@ test('it validates the form onBlur for tenure entity', async () => {
 
 // test('it shows error if post request for add new comment fails', async () => {
 //     post('/api/v1/notes', 'error', 404);
-//     routeRender(
+//     render(
 //         <AddCommentsView
 //             targetName={personName(mockPerson)}
 //             targetType="person"

@@ -6,7 +6,23 @@ import { rest } from 'msw';
 import { createMemoryHistory, MemoryHistory } from 'history';
 import { render, RenderResult } from '@testing-library/react';
 import { queries } from '@mtfh/common';
-import { server } from './mocks';
+
+import {
+    generateMockReferenceDataV1,
+    postCommentV1,
+    getReferenceDataV1,
+    getTenureV1,
+    server,
+} from '@hackney/mtfh-test-utils';
+
+const commentsRefData = Array.from({ length: 3 }).map((_, index) =>
+    generateMockReferenceDataV1({
+        category: 'comments',
+        subCategory: 'category',
+        code: `categoryCode${index + 1}`,
+        value: `Category value ${index + 1}`,
+    })
+);
 
 Object.defineProperty(global, 'fetch', {
     value: fetch,
@@ -15,6 +31,11 @@ Object.defineProperty(global, 'fetch', {
 
 beforeAll(() => {
     server.listen();
+});
+
+beforeEach(() => {
+    server.use(getTenureV1());
+    server.use(getReferenceDataV1(commentsRefData), postCommentV1());
 });
 
 afterEach(() => {

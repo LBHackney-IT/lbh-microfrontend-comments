@@ -1,14 +1,15 @@
 import React from 'react';
 import { screen, waitFor } from '@testing-library/react';
+import { render } from '@hackney/mtfh-test-utils';
 
-import { get, routeRender } from '../../test-utils';
+import { get } from '../../test-utils';
 import { config } from '../../services';
 import { mockTenure } from '../../mocks';
 import { AddCommentsToTenureView } from '.';
 
 const loadAddCommentsToTenureView = async (id?: string) => {
     get(`${config.tenureApiUrl}/tenures/:id`, mockTenure);
-    const utils = routeRender(<AddCommentsToTenureView />, {
+    const utils = render(<AddCommentsToTenureView />, {
         url: `/comment/tenure/${mockTenure.id}`,
         path: '/comment/tenure/:id',
     });
@@ -22,7 +23,7 @@ const loadAddCommentsToTenureView = async (id?: string) => {
     return utils;
 };
 
-test('it renders add comments to person view correctly', async () => {
+test('it renders add comments to tenure view correctly', async () => {
     await loadAddCommentsToTenureView();
 });
 
