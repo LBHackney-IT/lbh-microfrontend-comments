@@ -7,7 +7,7 @@ import { config } from '../../services';
 import { mockTenure } from '../../mocks';
 import { AddCommentsToTenureView } from '.';
 
-const loadAddCommentsToTenureView = async (id?: string) => {
+const loadAddCommentsToTenureView = async () => {
     get(`${config.tenureApiUrl}/tenures/:id`, mockTenure);
     const utils = render(<AddCommentsToTenureView />, {
         url: `/comment/tenure/${mockTenure.id}`,

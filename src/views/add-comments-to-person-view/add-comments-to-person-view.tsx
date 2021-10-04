@@ -1,5 +1,6 @@
 import { useParams, Link as RouterLink } from 'react-router-dom';
 import React from 'react';
+import { useReferenceData } from '@mtfh/common/lib/api/reference-data/v1';
 import {
     Center,
     ErrorSummary,
@@ -9,11 +10,10 @@ import {
     Spinner,
     useFeatureToggle,
 } from '@mtfh/common';
-import { useReferenceData } from '@mtfh/common/lib/api/reference-data/v1';
 
+import { Relationship } from 'types';
 import { locale, usePerson } from '../../services';
 import { AddCommentsView, AddCommentsViewLegacy } from '../';
-import { Relationship } from 'types';
 
 const { comments, errors, personName } = locale;
 const { heading } = comments;

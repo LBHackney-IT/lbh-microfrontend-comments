@@ -1,5 +1,6 @@
 import { useParams, Link as RouterLink } from 'react-router-dom';
 import React from 'react';
+import { useReferenceData } from '@mtfh/common/lib/api/reference-data/v1';
 import {
     Center,
     ErrorSummary,
@@ -9,11 +10,10 @@ import {
     Spinner,
     useFeatureToggle,
 } from '@mtfh/common';
-import { useReferenceData } from '@mtfh/common/lib/api/reference-data/v1';
 
+import { CommentType, Relationship, Tenure } from 'types';
 import { locale, useTenure } from '../../services';
 import { AddCommentsView, AddCommentsViewLegacy } from '../';
-import { CommentType, HouseholdMember, Relationship, Tenure } from 'types';
 
 const { comments, errors, tenureName } = locale;
 const { heading } = comments;
@@ -36,15 +36,17 @@ const getRelationships = (tenureData: Tenure, targetType: CommentType) => {
         });
     }
 
-    tenureData.householdMembers?.forEach((householdMember: HouseholdMember) => {
-        if (householdMember.isResponsible) {
-            relationships.push({
-                targetId: householdMember.id,
-                label: householdMember.fullName,
-                targetType: 'person',
-            });
+    if (tenureData.householdMembers) {
+        for (const householdMember of tenureData.householdMembers) {
+            if (householdMember.isResponsible) {
+                relationships.push({
+                    targetId: householdMember.id,
+                    label: householdMember.fullName,
+                    targetType: 'person',
+                });
+            }
         }
-    });
+    }
 
     return relationships;
 };
