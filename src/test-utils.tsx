@@ -9,11 +9,20 @@ import { queries } from '@mtfh/common';
 
 import {
     generateMockReferenceDataV1,
-    postCommentV1,
     getReferenceDataV1,
     getTenureV1,
     server,
+    generateMockCommentV1,
 } from '@hackney/mtfh-test-utils';
+
+export const mockCommentsV2 = Array.from({ length: 20 }).map(() =>
+    generateMockCommentV1()
+);
+
+export const postCommentV2 = (data: any = mockCommentsV2, code = 200) =>
+    rest.get('/api/v2/notes', (req, res, ctx) => {
+        return res(ctx.status(code), ctx.json(data));
+    });
 
 const commentsRefData = Array.from({ length: 3 }).map((_, index) =>
     generateMockReferenceDataV1({
@@ -35,7 +44,7 @@ beforeAll(() => {
 
 beforeEach(() => {
     server.use(getTenureV1());
-    server.use(getReferenceDataV1(commentsRefData), postCommentV1());
+    server.use(getReferenceDataV1(commentsRefData), postCommentV2());
 });
 
 afterEach(() => {

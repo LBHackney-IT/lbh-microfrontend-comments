@@ -4,13 +4,14 @@ import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { PageAnnouncementProvider } from '@mtfh/common';
 import { locale } from '@services';
 import { AddCommentsViewLegacy } from './add-comments-view-legacy';
-import { post, routeRender } from '../../test-utils';
+import { post } from '../../test-utils';
 import { mockPerson, mockTenure } from '../../mocks';
+import { render } from '@hackney/mtfh-test-utils';
 
 const { personName, tenureName, comments } = locale;
 
 const loadAddCommentToPersonForm = async (id?: string) => {
-    const utils = routeRender(
+    const utils = render(
         <PageAnnouncementProvider sessionKey="addComment">
             <AddCommentsViewLegacy
                 targetName={personName(mockPerson)}
@@ -29,13 +30,17 @@ const loadAddCommentToPersonForm = async (id?: string) => {
 };
 
 const loadAddCommentToTenureForm = async (id?: string) => {
-    const utils = routeRender(
+    const utils = render(
         <PageAnnouncementProvider sessionKey="addComment">
             <AddCommentsViewLegacy
                 targetName={tenureName(mockTenure)}
                 targetType="tenure"
             />
-        </PageAnnouncementProvider>
+        </PageAnnouncementProvider>,
+        {
+            url: `/comment/tenure/${mockTenure.id}`,
+            path: '/comment/tenure/:id',
+        }
     );
     await waitFor(() => {
         expect(screen.getByText('Save comment')).toBeInTheDocument();
@@ -129,26 +134,3 @@ test('it validates the form onBlur for tenure entity', async () => {
         ).toBeInTheDocument()
     );
 });
-
-// test('it shows error if post request for add new comment fails', async () => {
-//     post('/api/v1/notes', 'error', 404);
-//     routeRender(
-//         <AddCommentsView
-//             targetName={personName(mockPerson)}
-//             targetType="person"
-//         />
-//     );
-//     const input = screen.getByLabelText(
-//         /Comment description/
-//     ) as HTMLTextAreaElement;
-//     userEvent.type(input, 'This is a comment');
-//     fireEvent.change(input, { target: { value: '' } });
-//     fireEvent.blur(input);
-
-//     await waitFor(() =>
-//         expect(
-//             screen.getByText('Error')
-//         ).toBeInTheDocument()
-//     );
-
-// });
