@@ -90,9 +90,15 @@ test('it validates the form on submit for person entity', async () => {
     userEvent.click(button);
     await waitFor(() =>
         expect(
-            screen.getByText('You must enter a title for this comment')
+            screen.getByText('You must correct the indicated errors')
         ).toBeInTheDocument()
     );
+    expect(
+        screen.getByText('You must provide a title for this comment')
+    ).toBeInTheDocument();
+    expect(
+        screen.getByText('You must enter a description for this comment')
+    ).toBeInTheDocument();
 });
 
 test('it validates the form on submit for tenure entity', async () => {
@@ -101,9 +107,15 @@ test('it validates the form on submit for tenure entity', async () => {
     userEvent.click(button);
     await waitFor(() =>
         expect(
-            screen.getByText('You must enter a title for this comment')
+            screen.getByText('You must correct the indicated errors')
         ).toBeInTheDocument()
     );
+    expect(
+        screen.getByText('You must provide a title for this comment')
+    ).toBeInTheDocument();
+    expect(
+        screen.getByText('You must enter a description for this comment')
+    ).toBeInTheDocument();
 });
 
 test('it does not validated the form onBlur for person entity', async () => {
