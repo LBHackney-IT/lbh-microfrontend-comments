@@ -1,13 +1,14 @@
 import React from 'react';
 import { FormikProps } from 'formik';
+import { ReferenceData } from '@mtfh/common/lib/api/reference-data/v1';
 import { Checkbox, Field, Input, Select, TextArea } from '@mtfh/common';
-import { CommentsFormData } from '.';
+
+import { Relationship } from 'types';
+import { SelectRelationships } from '@components';
+import { CommentsFormData } from './index';
 import { locale } from '../../services';
 
 import './add-comment-form.styles.scss';
-import { SelectRelationships } from '@components';
-import { Relationship } from 'types';
-import { ReferenceData } from '@mtfh/common/lib/api/reference-data/v1';
 
 const { comments } = locale;
 
@@ -26,11 +27,7 @@ export const AddCommentForm = ({
 
     return (
         <>
-            <SelectRelationships
-                values={values.relationshipIds}
-                handleChange={handleChange}
-                relationships={relationships}
-            />
+            <SelectRelationships relationships={relationships} />
             <Field
                 id="add-comment-title"
                 name="title"

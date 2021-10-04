@@ -2,13 +2,12 @@ import React from 'react';
 import userEvent from '@testing-library/user-event';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { PageAnnouncementProvider } from '@mtfh/common';
+import { render } from '@hackney/mtfh-test-utils';
 import { locale } from '@services';
 import { AddCommentsViewLegacy } from './add-comments-view-legacy';
-import { post } from '../../test-utils';
 import { mockPerson, mockTenure } from '../../mocks';
-import { render } from '@hackney/mtfh-test-utils';
 
-const { personName, tenureName, comments } = locale;
+const { personName, tenureName } = locale;
 
 const loadAddCommentToPersonForm = async (id?: string) => {
     const utils = render(
@@ -17,7 +16,11 @@ const loadAddCommentToPersonForm = async (id?: string) => {
                 targetName={personName(mockPerson)}
                 targetType="person"
             />
-        </PageAnnouncementProvider>
+        </PageAnnouncementProvider>,
+        {
+            url: `/comment/person/${mockPerson.id}`,
+            path: '/comment/person/:id',
+        }
     );
     await waitFor(() => {
         expect(screen.getByText('Save comment')).toBeInTheDocument();
@@ -66,8 +69,10 @@ test('it submits the form correctly for person entity', async () => {
         /Comment description/
     ) as HTMLTextAreaElement;
     const button = screen.getByText('Save comment');
+
     userEvent.type(input, 'This is a comment');
     userEvent.click(button);
+
     await waitFor(() =>
         expect(
             screen.getByText('Comment successfully saved')

@@ -20,11 +20,24 @@ export const mockCommentsV2 = Array.from({ length: 20 }).map(() =>
 );
 
 export const postCommentV2 = (data: any = mockCommentsV2, code = 200) =>
-    rest.get('/api/v2/notes', (req, res, ctx) => {
-        return res(ctx.status(code), ctx.json(data));
+    rest.post('/api/v2/notes', (request, response, context) => {
+        const payload = request.body as Record<string, any>;
+        return response(
+            context.status(code),
+            context.json({ ...data, ...payload })
+        );
     });
 
-const commentsRefData = Array.from({ length: 3 }).map((_, index) =>
+export const postCommentV1 = (data: any = mockCommentsV2, code = 200) =>
+    rest.post('/api/notes', (request, response, context) => {
+        const payload = request.body as Record<string, any>;
+        return response(
+            context.status(code),
+            context.json({ ...data, ...payload })
+        );
+    });
+
+const commentsReferenceData = Array.from({ length: 3 }).map((_, index) =>
     generateMockReferenceDataV1({
         category: 'comments',
         subCategory: 'category',
@@ -43,8 +56,12 @@ beforeAll(() => {
 });
 
 beforeEach(() => {
-    server.use(getTenureV1());
-    server.use(getReferenceDataV1(commentsRefData), postCommentV2());
+    server.use(
+        getTenureV1(),
+        getReferenceDataV1(commentsReferenceData),
+        postCommentV1(),
+        postCommentV2()
+    );
 });
 
 afterEach(() => {

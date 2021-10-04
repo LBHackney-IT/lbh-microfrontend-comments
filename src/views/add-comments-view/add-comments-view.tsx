@@ -1,6 +1,9 @@
 import { useParams, Link as RouterLink, useHistory } from 'react-router-dom';
 import React, { useState } from 'react';
 import { Formik, Form } from 'formik';
+import { useErrorCodes } from '@mtfh/common/lib/hooks';
+import { Link, DialogPrompt } from '@mtfh/common/lib/components';
+import { ReferenceData } from '@mtfh/common/lib/api/reference-data/v1';
 import {
     Button,
     Center,
@@ -8,17 +11,13 @@ import {
     ErrorSummary,
     Spinner,
 } from '@mtfh/common';
+import { Relationship } from 'types/relationships';
 import { addComment, locale } from '../../services';
 import {
     CommentsFormData,
     AddCommentForm,
     commentsSchema,
 } from '../../components';
-
-import { Link, DialogPrompt } from '@mtfh/common/lib/components';
-import { Relationship } from 'types/relationships';
-import { ReferenceData } from '@mtfh/common/lib/api/reference-data/v1';
-import { useErrorCodes } from '@mtfh/common/lib/hooks';
 
 const { comments, errors, dialog } = locale;
 

@@ -16,10 +16,7 @@ export const commentsSchema = ({ errorMessages }: ErrorMessages) =>
             subCategory: Yup.string().nullable(),
             description: Yup.string().nullable(),
         }),
-        relationshipIds: Yup.array().min(
-            1,
-            errorMessages.W4
-        ),
+        relationshipIds: Yup.array().min(1, errorMessages.W4),
     });
 
 export type CommentsFormData = Yup.Asserts<ReturnType<typeof commentsSchema>>;

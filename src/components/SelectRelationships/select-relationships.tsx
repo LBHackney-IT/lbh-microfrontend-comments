@@ -1,17 +1,15 @@
 import React from 'react';
-import { ChangeEventHandler } from 'react-router/node_modules/@types/react';
+import { useFormikContext } from 'formik';
 import { Checkbox, CheckboxGroup, Field } from '@mtfh/common';
+import { CommentsFormData } from '../AddCommentForm';
 import { Relationship } from '../../types';
 
 export const SelectRelationships = ({
-    handleChange,
     relationships,
-    values,
 }: {
-    handleChange: ChangeEventHandler<HTMLInputElement>;
     relationships: Relationship[];
-    values: any[] | undefined;
 }) => {
+    const { handleChange, values } = useFormikContext<CommentsFormData>();
     if (relationships.length === 1) return null;
     return (
         <Field
@@ -23,7 +21,9 @@ export const SelectRelationships = ({
             <CheckboxGroup>
                 {relationships?.map((relationship, index) => (
                     <Checkbox
-                        checked={values?.includes(relationship.targetId)}
+                        checked={values.relationshipIds?.includes(
+                            relationship.targetId
+                        )}
                         key={index}
                         onChange={handleChange}
                         name="relationshipIds"

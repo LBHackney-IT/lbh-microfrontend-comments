@@ -1,14 +1,12 @@
 import React from 'react';
+import { Formik } from 'formik';
 import userEvent from '@testing-library/user-event';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
-import { createMemoryHistory } from 'history';
 import { PageAnnouncementProvider } from '@mtfh/common';
+import { render } from '@hackney/mtfh-test-utils';
 import { locale } from '@services';
 import { AddCommentsView } from './add-comments-view';
 import { mockPerson, mockTenure } from '../../mocks';
-import { render } from '@hackney/mtfh-test-utils';
-import { Formik } from 'formik';
-import { Router } from 'react-router-dom';
 
 const { personName, tenureName } = locale;
 
@@ -46,29 +44,26 @@ const loadAddCommentToPersonForm = async () => {
 };
 
 const loadAddCommentToTenureForm = async () => {
-    const history = createMemoryHistory();
     const utils = render(
-        <Router history={history}>
-            <PageAnnouncementProvider sessionKey="addComment">
-                <Formik initialValues={[]} onSubmit={() => {}}>
-                    <AddCommentsView
-                        categories={[]}
-                        relationships={[
-                            {
-                                targetId: mockTenure.id,
-                                targetType: 'tenure',
-                            },
-                            {
-                                targetId: '2',
-                                targetType: 'person',
-                            },
-                        ]}
-                        targetName={tenureName(mockTenure)}
-                        targetType="tenure"
-                    />
-                </Formik>
-            </PageAnnouncementProvider>
-        </Router>,
+        <PageAnnouncementProvider sessionKey="addComment">
+            <Formik initialValues={[]} onSubmit={() => {}}>
+                <AddCommentsView
+                    categories={[]}
+                    relationships={[
+                        {
+                            targetId: mockTenure.id,
+                            targetType: 'tenure',
+                        },
+                        {
+                            targetId: '2',
+                            targetType: 'person',
+                        },
+                    ]}
+                    targetName={tenureName(mockTenure)}
+                    targetType="tenure"
+                />
+            </Formik>
+        </PageAnnouncementProvider>,
         {
             url: `/comment/tenure/${mockTenure.id}`,
             path: '/comment/tenure/:id',
@@ -78,7 +73,7 @@ const loadAddCommentToTenureForm = async () => {
         expect(screen.getByText('Save comment')).toBeInTheDocument();
     });
 
-    return { utils, history };
+    return utils;
 };
 
 test('it renders correctly with person details', async () => {
