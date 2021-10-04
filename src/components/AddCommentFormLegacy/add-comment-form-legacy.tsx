@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormikProps } from 'formik';
 import { FormGroup, TextArea } from '@mtfh/common';
-import { CommentsFormDataLegacy } from '.';
+import { CommentsFormDataLegacy } from './';
 
 import './add-comment-form-legacy.styles.scss';
 

@@ -1,13 +1,11 @@
 import React from 'react';
 import { FormikProps } from 'formik';
 import {
-    Center,
     Checkbox,
     ErrorSummary,
     Field,
     Input,
     Select,
-    Spinner,
     TextArea,
 } from '@mtfh/common';
 import { useReferenceData } from '@mtfh/common/lib/api/reference-data/v1';
@@ -15,14 +13,18 @@ import { CommentsFormData } from '.';
 import { locale } from '../../services';
 
 import './add-comment-form.styles.scss';
+import { SelectRelationships } from '@components';
+import { Relationship } from 'types';
 
 const { comments } = locale;
 
 interface AddCommentsFormProperties {
+    relationships: Relationship[];
     formik: FormikProps<CommentsFormData>;
 }
 
 export const AddCommentForm = ({
+    relationships,
     formik: { handleChange, handleBlur, values },
 }: AddCommentsFormProperties): JSX.Element => {
     const { selectCategory, highlightThisComment } = comments;
@@ -41,18 +43,13 @@ export const AddCommentForm = ({
         );
     }
 
-    if (!data) {
-        return (
-            <Center>
-                <Spinner />
-            </Center>
-        );
-    }
-
-    const { category: categories } = data;
-
     return (
         <>
+            <SelectRelationships
+                values={values.relationshipIds}
+                handleChange={handleChange}
+                relationships={relationships}
+            />
             <Field
                 id="add-comment-title"
                 name="title"
@@ -75,15 +72,16 @@ export const AddCommentForm = ({
                     value={values.description}
                 />
             </Field>
+
             <Field
                 id="add-comment-category"
                 name="categorisation.category"
                 label="Comment category"
                 required
             >
-                <Select>
+                <Select isLoading={!Boolean(data?.category)}>
                     <option value="">{selectCategory}</option>
-                    {categories.map((category, index) => (
+                    {data?.category.map((category, index) => (
                         <option key={index} value={category.code}>
                             {category.value}
                         </option>

@@ -10,16 +10,19 @@ import {
 import { addComment, locale } from '../../services';
 import {
     CommentsFormData,
-    commentsSchema,
     AddCommentForm,
+    commentsSchema,
 } from '../../components';
 
 import { Link, DialogPrompt } from '@mtfh/common/lib/components';
+import { Relationship } from 'types/relationships';
 
 const { comments, errors, dialog } = locale;
+
 export interface AddCommentViewProperties {
     targetName: string;
     targetType: 'person' | 'tenure';
+    relationships: Relationship[];
 }
 
 export type AddCommentFormError = 'error' | 'invalid';
@@ -31,12 +34,28 @@ export interface AddCommentUrlParameters {
 export const AddCommentsView = ({
     targetName,
     targetType,
+    relationships,
 }: AddCommentViewProperties): JSX.Element => {
     const { id } = useParams<AddCommentUrlParameters>();
     const [error, setError] = useState<AddCommentFormError | undefined>();
     const [isBlocking, setIsBlocking] = useState(true);
-
     const { addAnnouncement, clearAnnouncement } = usePageAnnouncement();
+
+    const addComments = async (values: CommentsFormData) => {
+        const { relationshipIds = [], ...restOfValues } = values;
+        const selectedRelationships = relationships.filter(relationship =>
+            relationshipIds.includes(relationship.targetId)
+        );
+        return Promise.all(
+            (selectedRelationships || []).map(selectedRelationship =>
+                addComment({
+                    ...restOfValues,
+                    targetType: selectedRelationship.targetType,
+                    targetId: selectedRelationship.targetId,
+                })
+            )
+        );
+    };
 
     return (
         <>
@@ -51,16 +70,13 @@ export const AddCommentsView = ({
                         subCategory: null,
                         description: null,
                     },
+                    relationshipIds: [id],
                 }}
                 validationSchema={commentsSchema}
                 onSubmit={async (values, { setErrors, resetForm }) => {
                     setError(undefined);
                     try {
-                        await addComment({
-                            ...values,
-                            targetType,
-                            targetId: id,
-                        });
+                        await addComments(values);
                         setIsBlocking(false);
                         resetForm();
                         addAnnouncement({
@@ -114,11 +130,20 @@ export const AddCommentsView = ({
                                 </ErrorSummary>
                             )}
 
-                            <h2 className="add-comment-person govuk-label lbh-label">
-                                {comments.addCommentToLabel}{' '}
-                                <b data-testid="entity-name">{targetName}</b>:
-                            </h2>
-                            <AddCommentForm formik={properties} />
+                            {relationships?.length === 1 && (
+                                <h2 className="add-comment-person govuk-label lbh-label">
+                                    {comments.addCommentToLabel}{' '}
+                                    <b data-testid="entity-name">
+                                        {targetName}
+                                    </b>
+                                    :
+                                </h2>
+                            )}
+
+                            <AddCommentForm
+                                relationships={relationships}
+                                formik={properties}
+                            />
 
                             <Button
                                 type="submit"

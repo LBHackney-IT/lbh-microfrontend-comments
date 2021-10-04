@@ -13,6 +13,7 @@ const loadAddCommentToPersonForm = async (id?: string) => {
     const utils = routeRender(
         <PageAnnouncementProvider sessionKey="addComment">
             <AddCommentsView
+                relationships={[]}
                 targetName={personName(mockPerson)}
                 targetType="person"
             />
@@ -32,6 +33,7 @@ const loadAddCommentToTenureForm = async (id?: string) => {
     const utils = routeRender(
         <PageAnnouncementProvider sessionKey="addComment">
             <AddCommentsView
+                relationships={[]}
                 targetName={tenureName(mockTenure)}
                 targetType="tenure"
             />

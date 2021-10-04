@@ -12,6 +12,7 @@ import {
 
 import { locale, usePerson } from '../../services';
 import { AddCommentsView, AddCommentsViewLegacy } from '../';
+import { Relationship } from 'types';
 
 const { comments, errors, personName } = locale;
 const { heading } = comments;
@@ -21,6 +22,8 @@ export const AddCommentsToPersonView = (): JSX.Element => {
     const { id } = useParams<{ id: string }>();
     const hasEnhancedComments = useFeatureToggle('MMH.EnhancedComments');
     const { data: personData, error } = usePerson(id);
+
+    const targetType = 'person';
 
     if (error) {
         return (
@@ -39,6 +42,13 @@ export const AddCommentsToPersonView = (): JSX.Element => {
             </Center>
         );
     }
+
+    const relationships: Relationship[] = [
+        {
+            targetId: id,
+            targetType,
+        },
+    ];
 
     const targetName = personName(personData);
 
@@ -63,12 +73,13 @@ export const AddCommentsToPersonView = (): JSX.Element => {
                 {hasEnhancedComments ? (
                     <AddCommentsView
                         targetName={targetName}
-                        targetType="person"
+                        targetType={targetType}
+                        relationships={relationships}
                     />
                 ) : (
                     <AddCommentsViewLegacy
                         targetName={targetName}
-                        targetType="person"
+                        targetType={targetType}
                     />
                 )}
             </Layout>

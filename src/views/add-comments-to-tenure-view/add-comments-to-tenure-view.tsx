@@ -5,7 +5,6 @@ import {
     ErrorSummary,
     Layout,
     Link,
-    PageAnnouncement,
     PageAnnouncementProvider,
     Spinner,
     useFeatureToggle,
@@ -13,10 +12,41 @@ import {
 
 import { locale, useTenure } from '../../services';
 import { AddCommentsView, AddCommentsViewLegacy } from '../';
+import { CommentType, HouseholdMember, Relationship, Tenure } from 'types';
 
 const { comments, errors, tenureName } = locale;
 const { heading } = comments;
 const { unableToFetchRecord, unableToFetchRecordDescription } = errors;
+
+const getRelationships = (tenureData: Tenure, targetType: CommentType) => {
+    const relationships: Relationship[] = [
+        {
+            label: `Tenure payment ref ${tenureData.paymentReference} (${tenureData.tenureType?.description})`,
+            targetId: tenureData.id,
+            targetType,
+        },
+    ];
+
+    if (tenureData.tenuredAsset) {
+        relationships.push({
+            targetId: tenureData.tenuredAsset.id,
+            label: tenureData.tenuredAsset.fullAddress,
+            targetType: 'asset',
+        });
+    }
+
+    tenureData.householdMembers?.forEach((householdMember: HouseholdMember) => {
+        if (householdMember.isResponsible) {
+            relationships.push({
+                targetId: householdMember.id,
+                label: householdMember.fullName,
+                targetType: 'person',
+            });
+        }
+    });
+
+    return relationships;
+};
 
 export const AddCommentsToTenureView = (): JSX.Element => {
     const { id } = useParams<{ id: string }>();
@@ -42,7 +72,10 @@ export const AddCommentsToTenureView = (): JSX.Element => {
         );
     }
 
+    const targetType = 'tenure';
     const targetName = tenureName(tenureData);
+
+    const relationships = getRelationships(tenureData, targetType);
 
     return (
         <PageAnnouncementProvider sessionKey="addComment">
@@ -65,12 +98,13 @@ export const AddCommentsToTenureView = (): JSX.Element => {
                 {hasEnhancedComments ? (
                     <AddCommentsView
                         targetName={targetName}
-                        targetType="tenure"
+                        targetType={targetType}
+                        relationships={relationships}
                     />
                 ) : (
                     <AddCommentsViewLegacy
                         targetName={targetName}
-                        targetType="tenure"
+                        targetType={targetType}
                     />
                 )}
             </Layout>

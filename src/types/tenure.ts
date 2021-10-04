@@ -30,4 +30,5 @@ export interface Tenure {
     isActive: boolean;
     tenureType: TenureType;
     tenuredAsset: TenureAsset;
+    householdMembers: HouseholdMember[];
 }
