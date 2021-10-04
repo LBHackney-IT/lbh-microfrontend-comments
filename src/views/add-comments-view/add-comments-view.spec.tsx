@@ -4,15 +4,16 @@ import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { PageAnnouncementProvider } from '@mtfh/common';
 import { locale } from '@services';
 import { AddCommentsView } from './add-comments-view';
-import { post, routeRender } from '../../test-utils';
+import { routeRender } from '../../test-utils';
 import { mockPerson, mockTenure } from '../../mocks';
 
-const { personName, tenureName, comments } = locale;
+const { personName, tenureName } = locale;
 
 const loadAddCommentToPersonForm = async (id?: string) => {
     const utils = routeRender(
         <PageAnnouncementProvider sessionKey="addComment">
             <AddCommentsView
+                categories={[]}
                 relationships={[]}
                 targetName={personName(mockPerson)}
                 targetType="person"
@@ -33,6 +34,7 @@ const loadAddCommentToTenureForm = async (id?: string) => {
     const utils = routeRender(
         <PageAnnouncementProvider sessionKey="addComment">
             <AddCommentsView
+                categories={[]}
                 relationships={[]}
                 targetName={tenureName(mockTenure)}
                 targetType="tenure"

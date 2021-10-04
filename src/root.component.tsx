@@ -1,12 +1,12 @@
-import { BrowserRouter as Router } from 'react-router-dom';
+import { ConfirmationRouter } from '@mtfh/common/lib/components';
 import React from 'react';
 import './root.styles.scss';
 import App from './app';
 
 export default function Root(): JSX.Element {
     return (
-        <Router>
+        <ConfirmationRouter>
             <App />
-        </Router>
+        </ConfirmationRouter>
     );
 }

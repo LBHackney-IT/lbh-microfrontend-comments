@@ -9,6 +9,7 @@ import {
     Spinner,
     useFeatureToggle,
 } from '@mtfh/common';
+import { useReferenceData } from '@mtfh/common/lib/api/reference-data/v1';
 
 import { locale, useTenure } from '../../services';
 import { AddCommentsView, AddCommentsViewLegacy } from '../';
@@ -52,9 +53,17 @@ export const AddCommentsToTenureView = (): JSX.Element => {
     const { id } = useParams<{ id: string }>();
     const hasEnhancedComments = useFeatureToggle('MMH.EnhancedComments');
 
-    const { data: tenureData, error } = useTenure(id);
+    const {
+        data: referenceData,
+        error: referenceError,
+    } = useReferenceData<'category'>({
+        category: 'comment',
+        subCategory: 'category',
+    });
 
-    if (error) {
+    const { data: tenureData, error: tenureError } = useTenure(id);
+
+    if (tenureError || referenceError) {
         return (
             <ErrorSummary
                 id="entity-error"
@@ -64,7 +73,7 @@ export const AddCommentsToTenureView = (): JSX.Element => {
         );
     }
 
-    if (!tenureData) {
+    if (!tenureData || !referenceData) {
         return (
             <Center>
                 <Spinner />
@@ -74,7 +83,7 @@ export const AddCommentsToTenureView = (): JSX.Element => {
 
     const targetType = 'tenure';
     const targetName = tenureName(tenureData);
-
+    const { category: categories } = referenceData;
     const relationships = getRelationships(tenureData, targetType);
 
     return (
@@ -100,6 +109,7 @@ export const AddCommentsToTenureView = (): JSX.Element => {
                         targetName={targetName}
                         targetType={targetType}
                         relationships={relationships}
+                        categories={categories}
                     />
                 ) : (
                     <AddCommentsViewLegacy

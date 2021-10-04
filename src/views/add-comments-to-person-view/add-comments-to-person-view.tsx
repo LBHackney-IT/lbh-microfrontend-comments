@@ -9,6 +9,7 @@ import {
     Spinner,
     useFeatureToggle,
 } from '@mtfh/common';
+import { useReferenceData } from '@mtfh/common/lib/api/reference-data/v1';
 
 import { locale, usePerson } from '../../services';
 import { AddCommentsView, AddCommentsViewLegacy } from '../';
@@ -21,11 +22,19 @@ const { unableToFetchRecord, unableToFetchRecordDescription } = errors;
 export const AddCommentsToPersonView = (): JSX.Element => {
     const { id } = useParams<{ id: string }>();
     const hasEnhancedComments = useFeatureToggle('MMH.EnhancedComments');
-    const { data: personData, error } = usePerson(id);
+    const { data: personData, error: personError } = usePerson(id);
+
+    const {
+        data: referenceData,
+        error: referenceError,
+    } = useReferenceData<'category'>({
+        category: 'comment',
+        subCategory: 'category',
+    });
 
     const targetType = 'person';
 
-    if (error) {
+    if (personError || referenceError) {
         return (
             <ErrorSummary
                 id="entity-error"
@@ -35,7 +44,7 @@ export const AddCommentsToPersonView = (): JSX.Element => {
         );
     }
 
-    if (!personData) {
+    if (!personData || !referenceData) {
         return (
             <Center>
                 <Spinner />
@@ -50,6 +59,7 @@ export const AddCommentsToPersonView = (): JSX.Element => {
         },
     ];
 
+    const { category: categories } = referenceData;
     const targetName = personName(personData);
 
     return (
@@ -75,6 +85,7 @@ export const AddCommentsToPersonView = (): JSX.Element => {
                         targetName={targetName}
                         targetType={targetType}
                         relationships={relationships}
+                        categories={categories}
                     />
                 ) : (
                     <AddCommentsViewLegacy

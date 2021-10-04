@@ -1,12 +1,7 @@
-import { useParams, Link as RouterLink } from 'react-router-dom';
+import { useParams, Link as RouterLink, useHistory } from 'react-router-dom';
 import React, { useState } from 'react';
 import { Formik, Form } from 'formik';
-import {
-    Button,
-    PageAnnouncement,
-    ErrorSummary,
-    usePageAnnouncement,
-} from '@mtfh/common';
+import { Button, PageAnnouncement, ErrorSummary } from '@mtfh/common';
 import { addComment, locale } from '../../services';
 import {
     CommentsFormData,
@@ -16,6 +11,7 @@ import {
 
 import { Link, DialogPrompt } from '@mtfh/common/lib/components';
 import { Relationship } from 'types/relationships';
+import { ReferenceData } from '@mtfh/common/lib/api/reference-data/v1';
 
 const { comments, errors, dialog } = locale;
 
@@ -23,6 +19,7 @@ export interface AddCommentViewProperties {
     targetName: string;
     targetType: 'person' | 'tenure';
     relationships: Relationship[];
+    categories: ReferenceData[];
 }
 
 export type AddCommentFormError = 'error' | 'invalid';
@@ -35,11 +32,12 @@ export const AddCommentsView = ({
     targetName,
     targetType,
     relationships,
+    categories,
 }: AddCommentViewProperties): JSX.Element => {
     const { id } = useParams<AddCommentUrlParameters>();
     const [error, setError] = useState<AddCommentFormError | undefined>();
     const [isBlocking, setIsBlocking] = useState(true);
-    const { addAnnouncement, clearAnnouncement } = usePageAnnouncement();
+    const history = useHistory();
 
     const addComments = async (values: CommentsFormData) => {
         const { relationshipIds = [], ...restOfValues } = values;
@@ -72,18 +70,16 @@ export const AddCommentsView = ({
                     },
                     relationshipIds: [id],
                 }}
+                validateOnChange={false}
+                validateOnBlur={false}
                 validationSchema={commentsSchema}
-                onSubmit={async (values, { setErrors, resetForm }) => {
+                onSubmit={async (values, { setErrors }) => {
                     setError(undefined);
                     try {
                         await addComments(values);
                         setIsBlocking(false);
-                        resetForm();
-                        addAnnouncement({
-                            heading: comments.commentSuccesfullySavedLabel,
-                        });
+                        history.push(`/${targetType}/${id}`);
                     } catch (error: any) {
-                        clearAnnouncement();
                         if (
                             typeof error === 'object' &&
                             error.isAxiosError === true
@@ -143,6 +139,7 @@ export const AddCommentsView = ({
                             <AddCommentForm
                                 relationships={relationships}
                                 formik={properties}
+                                categories={categories}
                             />
 
                             <Button

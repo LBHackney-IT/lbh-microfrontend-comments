@@ -1,47 +1,28 @@
 import React from 'react';
 import { FormikProps } from 'formik';
-import {
-    Checkbox,
-    ErrorSummary,
-    Field,
-    Input,
-    Select,
-    TextArea,
-} from '@mtfh/common';
-import { useReferenceData } from '@mtfh/common/lib/api/reference-data/v1';
+import { Checkbox, Field, Input, Select, TextArea } from '@mtfh/common';
 import { CommentsFormData } from '.';
 import { locale } from '../../services';
 
 import './add-comment-form.styles.scss';
 import { SelectRelationships } from '@components';
 import { Relationship } from 'types';
+import { ReferenceData } from '@mtfh/common/lib/api/reference-data/v1';
 
 const { comments } = locale;
 
 interface AddCommentsFormProperties {
     relationships: Relationship[];
     formik: FormikProps<CommentsFormData>;
+    categories: ReferenceData[];
 }
 
 export const AddCommentForm = ({
     relationships,
     formik: { handleChange, handleBlur, values },
+    categories,
 }: AddCommentsFormProperties): JSX.Element => {
     const { selectCategory, highlightThisComment } = comments;
-    const { data, error } = useReferenceData<'category'>({
-        category: 'comment',
-        subCategory: 'category',
-    });
-
-    if (error) {
-        return (
-            <ErrorSummary
-                id="add-comment-error"
-                title={locale.errors.unableToFetchRecord}
-                description={locale.errors.unableToFetchRecordDescription}
-            />
-        );
-    }
 
     return (
         <>
@@ -79,9 +60,9 @@ export const AddCommentForm = ({
                 label="Comment category"
                 required
             >
-                <Select isLoading={!Boolean(data?.category)}>
+                <Select>
                     <option value="">{selectCategory}</option>
-                    {data?.category.map((category, index) => (
+                    {categories?.map((category, index) => (
                         <option key={index} value={category.code}>
                             {category.value}
                         </option>
