@@ -77,6 +77,10 @@ export const AddCommentsView = ({
                     setError(undefined);
                     try {
                         await addComments(values);
+                        sessionStorage.setItem(
+                            `${targetType}:heading`,
+                            comments.commentSuccesfullySavedLabel
+                        );
                         setIsBlocking(false);
                         history.push(`/${targetType}/${id}`);
                     } catch (error: any) {
