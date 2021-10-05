@@ -1,10 +1,10 @@
 import * as Yup from 'yup';
 
-type ErrorMessages = {
+export type ErrorMessages = {
     errorMessages: Record<string, string>;
 };
 
-export const commentsSchema = ({ errorMessages }: ErrorMessages) =>
+export const commentsSchema = (errorMessages: Record<string, string>) =>
     Yup.object({
         description: Yup.string()
             .required(errorMessages.W2)

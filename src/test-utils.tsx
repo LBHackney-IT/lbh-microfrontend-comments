@@ -46,6 +46,15 @@ const commentsReferenceData = Array.from({ length: 3 }).map((_, index) =>
     })
 );
 
+export const errorsReferenceData = Array.from({ length: 10 }).map((_, index) =>
+    generateMockReferenceDataV1({
+        category: 'errors-code',
+        subCategory: 'mmh',
+        code: `W${index + 1}`,
+        value: `Error Message${index + 1}`,
+    })
+);
+
 Object.defineProperty(global, 'fetch', {
     value: fetch,
     writable: true,
@@ -59,6 +68,7 @@ beforeEach(() => {
     server.use(
         getTenureV1(),
         getReferenceDataV1(commentsReferenceData),
+        getReferenceDataV1(errorsReferenceData),
         postCommentV1(),
         postCommentV2()
     );

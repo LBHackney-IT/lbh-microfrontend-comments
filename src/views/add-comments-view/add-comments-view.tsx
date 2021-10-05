@@ -1,16 +1,9 @@
 import { useParams, Link as RouterLink, useHistory } from 'react-router-dom';
 import React, { useState } from 'react';
 import { Formik, Form } from 'formik';
-import { useErrorCodes } from '@mtfh/common/lib/hooks';
 import { Link, DialogPrompt } from '@mtfh/common/lib/components';
 import { ReferenceData } from '@mtfh/common/lib/api/reference-data/v1';
-import {
-    Button,
-    Center,
-    PageAnnouncement,
-    ErrorSummary,
-    Spinner,
-} from '@mtfh/common';
+import { Button, PageAnnouncement, ErrorSummary } from '@mtfh/common';
 import { Relationship } from 'types/relationships';
 import { addComment, locale } from '../../services';
 import {
@@ -26,6 +19,7 @@ export interface AddCommentViewProperties {
     targetType: 'person' | 'tenure';
     relationships: Relationship[];
     categories: ReferenceData[];
+    errorMessages: Record<string, string>;
 }
 
 export type AddCommentFormError = 'error' | 'invalid';
@@ -34,31 +28,19 @@ export interface AddCommentUrlParameters {
     id: string;
 }
 
-interface ErrorMessages {
-    [key: string]: string;
-}
-
 export const AddCommentsView = ({
     targetName,
     targetType,
     relationships,
     categories,
+    errorMessages,
 }: AddCommentViewProperties): JSX.Element => {
     const { id } = useParams<AddCommentUrlParameters>();
     const [error, setError] = useState<AddCommentFormError | undefined>();
     const [isBlocking, setIsBlocking] = useState(true);
     const history = useHistory();
 
-    const errorMessages = useErrorCodes();
-    if (!errorMessages) {
-        return (
-            <Center>
-                <Spinner />
-            </Center>
-        );
-    }
-
-    const schema = commentsSchema({ errorMessages });
+    const schema = commentsSchema(errorMessages);
     const correctIndicatedErrorsText = errorMessages.W1;
     const addComments = async (values: CommentsFormData) => {
         const { relationshipIds = [], ...restOfValues } = values;
