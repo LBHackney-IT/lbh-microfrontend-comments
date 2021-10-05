@@ -1,16 +1,17 @@
 import { useParams, Link as RouterLink } from 'react-router-dom';
 import React from 'react';
+import { useReferenceData } from '@mtfh/common/lib/api/reference-data/v1';
 import {
     Center,
     ErrorSummary,
     Layout,
     Link,
-    PageAnnouncement,
     PageAnnouncementProvider,
     Spinner,
     useFeatureToggle,
 } from '@mtfh/common';
 
+import { CommentType, Relationship, Tenure } from 'types';
 import { locale, useTenure } from '../../services';
 import { AddCommentsView, AddCommentsViewLegacy } from '../';
 
@@ -18,13 +19,53 @@ const { comments, errors, tenureName } = locale;
 const { heading } = comments;
 const { unableToFetchRecord, unableToFetchRecordDescription } = errors;
 
+const getRelationships = (tenureData: Tenure, targetType: CommentType) => {
+    const relationships: Relationship[] = [
+        {
+            label: `Tenure payment ref ${tenureData.paymentReference} (${tenureData.tenureType?.description})`,
+            targetId: tenureData.id,
+            targetType,
+        },
+    ];
+
+    if (tenureData.tenuredAsset) {
+        relationships.push({
+            targetId: tenureData.tenuredAsset.id,
+            label: tenureData.tenuredAsset.fullAddress,
+            targetType: 'asset',
+        });
+    }
+
+    if (tenureData.householdMembers) {
+        for (const householdMember of tenureData.householdMembers) {
+            if (householdMember.isResponsible) {
+                relationships.push({
+                    targetId: householdMember.id,
+                    label: householdMember.fullName,
+                    targetType: 'person',
+                });
+            }
+        }
+    }
+
+    return relationships;
+};
+
 export const AddCommentsToTenureView = (): JSX.Element => {
     const { id } = useParams<{ id: string }>();
     const hasEnhancedComments = useFeatureToggle('MMH.EnhancedComments');
 
-    const { data: tenureData, error } = useTenure(id);
+    const {
+        data: referenceData,
+        error: referenceError,
+    } = useReferenceData<'category'>({
+        category: 'comment',
+        subCategory: 'category',
+    });
 
-    if (error) {
+    const { data: tenureData, error: tenureError } = useTenure(id);
+
+    if (tenureError || referenceError) {
         return (
             <ErrorSummary
                 id="entity-error"
@@ -34,7 +75,7 @@ export const AddCommentsToTenureView = (): JSX.Element => {
         );
     }
 
-    if (!tenureData) {
+    if (!tenureData || !referenceData) {
         return (
             <Center>
                 <Spinner />
@@ -42,7 +83,10 @@ export const AddCommentsToTenureView = (): JSX.Element => {
         );
     }
 
+    const targetType = 'tenure';
     const targetName = tenureName(tenureData);
+    const { category: categories } = referenceData;
+    const relationships = getRelationships(tenureData, targetType);
 
     return (
         <PageAnnouncementProvider sessionKey="addComment">
@@ -65,12 +109,14 @@ export const AddCommentsToTenureView = (): JSX.Element => {
                 {hasEnhancedComments ? (
                     <AddCommentsView
                         targetName={targetName}
-                        targetType="tenure"
+                        targetType={targetType}
+                        relationships={relationships}
+                        categories={categories}
                     />
                 ) : (
                     <AddCommentsViewLegacy
                         targetName={targetName}
-                        targetType="tenure"
+                        targetType={targetType}
                     />
                 )}
             </Layout>

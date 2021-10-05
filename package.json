@@ -82,12 +82,13 @@
         "webpack-merge": "^5.4.0"
     },
     "dependencies": {
-        "@mtfh/common": "https://github.com/LBHackney-IT/mtfh-common.git",
+        "@hackney/mtfh-test-utils": "^1.2.1",
+        "@mtfh/common": "https://github.com/LBHackney-IT/mtfh-frontend-common.git",
         "classnames": "^2.3.1",
         "date-fns": "^2.21.2",
-        "formik": "^2.2.6",
+        "formik": "^2.2.9",
         "govuk-frontend": "^3.11.0",
-        "lbh-frontend": "^3.5.2",
+        "lbh-frontend": "^3.6.1",
         "react": "^17.0.1",
         "react-dom": "^17.0.1",
         "react-router-dom": "^5.2.0",

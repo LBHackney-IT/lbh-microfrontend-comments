@@ -10,7 +10,11 @@ module.exports = {
         '@services': '<rootDir>/services',
         '@utilities': '<rootDir>/utils',
     },
-    setupFilesAfterEnv: ['@testing-library/jest-dom', './test-utils.tsx'],
+    setupFilesAfterEnv: [
+        '@testing-library/jest-dom',
+        '@hackney/mtfh-test-utils',
+        './test-utils.tsx',
+    ],
     coverageDirectory: '../coverage',
     coveragePathIgnorePatterns: [],
     coverageThreshold: {

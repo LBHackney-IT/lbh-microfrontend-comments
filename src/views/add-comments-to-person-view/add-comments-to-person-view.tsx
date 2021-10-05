@@ -1,5 +1,6 @@
 import { useParams, Link as RouterLink } from 'react-router-dom';
 import React from 'react';
+import { useReferenceData } from '@mtfh/common/lib/api/reference-data/v1';
 import {
     Center,
     ErrorSummary,
@@ -10,6 +11,7 @@ import {
     useFeatureToggle,
 } from '@mtfh/common';
 
+import { Relationship } from 'types';
 import { locale, usePerson } from '../../services';
 import { AddCommentsView, AddCommentsViewLegacy } from '../';
 
@@ -20,9 +22,19 @@ const { unableToFetchRecord, unableToFetchRecordDescription } = errors;
 export const AddCommentsToPersonView = (): JSX.Element => {
     const { id } = useParams<{ id: string }>();
     const hasEnhancedComments = useFeatureToggle('MMH.EnhancedComments');
-    const { data: personData, error } = usePerson(id);
+    const { data: personData, error: personError } = usePerson(id);
 
-    if (error) {
+    const {
+        data: referenceData,
+        error: referenceError,
+    } = useReferenceData<'category'>({
+        category: 'comment',
+        subCategory: 'category',
+    });
+
+    const targetType = 'person';
+
+    if (personError || referenceError) {
         return (
             <ErrorSummary
                 id="entity-error"
@@ -32,7 +44,7 @@ export const AddCommentsToPersonView = (): JSX.Element => {
         );
     }
 
-    if (!personData) {
+    if (!personData || !referenceData) {
         return (
             <Center>
                 <Spinner />
@@ -40,6 +52,14 @@ export const AddCommentsToPersonView = (): JSX.Element => {
         );
     }
 
+    const relationships: Relationship[] = [
+        {
+            targetId: id,
+            targetType,
+        },
+    ];
+
+    const { category: categories } = referenceData;
     const targetName = personName(personData);
 
     return (
@@ -63,12 +83,14 @@ export const AddCommentsToPersonView = (): JSX.Element => {
                 {hasEnhancedComments ? (
                     <AddCommentsView
                         targetName={targetName}
-                        targetType="person"
+                        targetType={targetType}
+                        relationships={relationships}
+                        categories={categories}
                     />
                 ) : (
                     <AddCommentsViewLegacy
                         targetName={targetName}
-                        targetType="person"
+                        targetType={targetType}
                     />
                 )}
             </Layout>

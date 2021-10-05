@@ -9,8 +9,8 @@ import {
 } from '@mtfh/common';
 import { addComment, locale } from '../../services';
 import {
-    CommentsFormData,
-    commentsSchema,
+    CommentsFormDataLegacy,
+    commentsSchemaLegacy,
     AddCommentFormLegacy,
 } from '../../components';
 
@@ -36,11 +36,11 @@ export const AddCommentsViewLegacy = ({
     const { addAnnouncement, clearAnnouncement } = usePageAnnouncement();
 
     return (
-        <Formik<CommentsFormData>
+        <Formik<CommentsFormDataLegacy>
             initialValues={{
                 description: '',
             }}
-            validationSchema={commentsSchema}
+            validationSchema={commentsSchemaLegacy}
             onSubmit={async (values, { setErrors, resetForm }) => {
                 setError(undefined);
                 try {

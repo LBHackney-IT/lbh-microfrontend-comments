@@ -4,3 +4,4 @@ export * from './Select';
 export * from './TextArea';
 export * from './AddCommentForm';
 export * from './AddCommentFormLegacy';
+export * from './SelectRelationships';

@@ -6,7 +6,45 @@ import { rest } from 'msw';
 import { createMemoryHistory, MemoryHistory } from 'history';
 import { render, RenderResult } from '@testing-library/react';
 import { queries } from '@mtfh/common';
-import { server } from './mocks';
+
+import {
+    generateMockReferenceDataV1,
+    getReferenceDataV1,
+    getTenureV1,
+    server,
+    generateMockCommentV1,
+} from '@hackney/mtfh-test-utils';
+
+export const mockCommentsV2 = Array.from({ length: 20 }).map(() =>
+    generateMockCommentV1()
+);
+
+export const postCommentV2 = (data: any = mockCommentsV2, code = 200) =>
+    rest.post('/api/v2/notes', (request, response, context) => {
+        const payload = request.body as Record<string, any>;
+        return response(
+            context.status(code),
+            context.json({ ...data, ...payload })
+        );
+    });
+
+export const postCommentV1 = (data: any = mockCommentsV2, code = 200) =>
+    rest.post('/api/notes', (request, response, context) => {
+        const payload = request.body as Record<string, any>;
+        return response(
+            context.status(code),
+            context.json({ ...data, ...payload })
+        );
+    });
+
+const commentsReferenceData = Array.from({ length: 3 }).map((_, index) =>
+    generateMockReferenceDataV1({
+        category: 'comments',
+        subCategory: 'category',
+        code: `categoryCode${index + 1}`,
+        value: `Category value ${index + 1}`,
+    })
+);
 
 Object.defineProperty(global, 'fetch', {
     value: fetch,
@@ -15,6 +53,15 @@ Object.defineProperty(global, 'fetch', {
 
 beforeAll(() => {
     server.listen();
+});
+
+beforeEach(() => {
+    server.use(
+        getTenureV1(),
+        getReferenceDataV1(commentsReferenceData),
+        postCommentV1(),
+        postCommentV2()
+    );
 });
 
 afterEach(() => {
