@@ -19,6 +19,7 @@ export interface AddCommentViewProperties {
     targetType: 'person' | 'tenure';
     relationships: Relationship[];
     categories: ReferenceData[];
+    errorMessages: Record<string, string>;
 }
 
 export type AddCommentFormError = 'error' | 'invalid';
@@ -32,12 +33,15 @@ export const AddCommentsView = ({
     targetType,
     relationships,
     categories,
+    errorMessages,
 }: AddCommentViewProperties): JSX.Element => {
     const { id } = useParams<AddCommentUrlParameters>();
     const [error, setError] = useState<AddCommentFormError | undefined>();
     const [isBlocking, setIsBlocking] = useState(true);
     const history = useHistory();
 
+    const schema = commentsSchema(errorMessages);
+    const correctIndicatedErrorsText = errorMessages.W1;
     const addComments = async (values: CommentsFormData) => {
         const { relationshipIds = [], ...restOfValues } = values;
         const selectedRelationships = relationships.filter(relationship =>
@@ -71,7 +75,7 @@ export const AddCommentsView = ({
                 }}
                 validateOnChange={false}
                 validateOnBlur={false}
-                validationSchema={commentsSchema}
+                validationSchema={schema}
                 onSubmit={async (values, { setErrors }) => {
                     setError(undefined);
                     try {
@@ -114,11 +118,7 @@ export const AddCommentsView = ({
                                 >
                                     <>
                                         {hasFieldErrors && (
-                                            <p>
-                                                {
-                                                    errors.pleaseCorrectIndicatedErrorsLabel
-                                                }
-                                            </p>
+                                            <p>{correctIndicatedErrorsText}</p>
                                         )}
                                         {error && (
                                             <p>

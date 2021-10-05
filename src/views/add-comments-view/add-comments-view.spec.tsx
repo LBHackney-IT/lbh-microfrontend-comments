@@ -6,9 +6,15 @@ import { PageAnnouncementProvider } from '@mtfh/common';
 import { render } from '@hackney/mtfh-test-utils';
 import { locale } from '@services';
 import { AddCommentsView } from './add-comments-view';
+import { errorsReferenceData } from '../../test-utils';
 import { mockPerson, mockTenure } from '../../mocks';
 
 const { personName, tenureName } = locale;
+
+const mockErrorMessages = errorsReferenceData.reduce((accumulator, object) => {
+    accumulator[object.code] = object.value;
+    return accumulator;
+}, {} as Record<string, string>);
 
 const loadAddCommentToPersonForm = async () => {
     const utils = render(
@@ -28,6 +34,7 @@ const loadAddCommentToPersonForm = async () => {
                     ]}
                     targetName={personName(mockPerson)}
                     targetType="person"
+                    errorMessages={mockErrorMessages}
                 />
             </Formik>
         </PageAnnouncementProvider>,
@@ -61,6 +68,7 @@ const loadAddCommentToTenureForm = async () => {
                     ]}
                     targetName={tenureName(mockTenure)}
                     targetType="tenure"
+                    errorMessages={mockErrorMessages}
                 />
             </Formik>
         </PageAnnouncementProvider>,
@@ -89,10 +97,10 @@ test('it validates the form on submit for person entity', async () => {
     const button = screen.getByText('Save comment');
     userEvent.click(button);
     await waitFor(() =>
-        expect(
-            screen.getByText('You must enter a title for this comment')
-        ).toBeInTheDocument()
+        expect(screen.getByText(mockErrorMessages.W1)).toBeInTheDocument()
     );
+    expect(screen.getByText(mockErrorMessages.W31)).toBeInTheDocument();
+    expect(screen.getByText(mockErrorMessages.W32)).toBeInTheDocument();
 });
 
 test('it validates the form on submit for tenure entity', async () => {
@@ -100,10 +108,10 @@ test('it validates the form on submit for tenure entity', async () => {
     const button = screen.getByText('Save comment');
     userEvent.click(button);
     await waitFor(() =>
-        expect(
-            screen.getByText('You must enter a title for this comment')
-        ).toBeInTheDocument()
+        expect(screen.getByText(mockErrorMessages.W1)).toBeInTheDocument()
     );
+    expect(screen.getByText(mockErrorMessages.W31)).toBeInTheDocument();
+    expect(screen.getByText(mockErrorMessages.W32)).toBeInTheDocument();
 });
 
 test('it does not validated the form onBlur for person entity', async () => {

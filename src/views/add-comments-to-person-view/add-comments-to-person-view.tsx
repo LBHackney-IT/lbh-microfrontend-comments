@@ -1,5 +1,6 @@
 import { useParams, Link as RouterLink } from 'react-router-dom';
 import React from 'react';
+import { useErrorCodes } from '@mtfh/common/lib/hooks';
 import { useReferenceData } from '@mtfh/common/lib/api/reference-data/v1';
 import {
     Center,
@@ -32,6 +33,8 @@ export const AddCommentsToPersonView = (): JSX.Element => {
         subCategory: 'category',
     });
 
+    const errorMessages = useErrorCodes();
+
     const targetType = 'person';
 
     if (personError || referenceError) {
@@ -43,8 +46,7 @@ export const AddCommentsToPersonView = (): JSX.Element => {
             />
         );
     }
-
-    if (!personData || !referenceData) {
+    if (!personData || !referenceData || !errorMessages) {
         return (
             <Center>
                 <Spinner />
@@ -86,6 +88,7 @@ export const AddCommentsToPersonView = (): JSX.Element => {
                         targetType={targetType}
                         relationships={relationships}
                         categories={categories}
+                        errorMessages={errorMessages}
                     />
                 ) : (
                     <AddCommentsViewLegacy

@@ -1,5 +1,6 @@
 import { useParams, Link as RouterLink } from 'react-router-dom';
 import React from 'react';
+import { useErrorCodes } from '@mtfh/common/lib/hooks';
 import { useReferenceData } from '@mtfh/common/lib/api/reference-data/v1';
 import {
     Center,
@@ -64,6 +65,7 @@ export const AddCommentsToTenureView = (): JSX.Element => {
     });
 
     const { data: tenureData, error: tenureError } = useTenure(id);
+    const errorMessages = useErrorCodes();
 
     if (tenureError || referenceError) {
         return (
@@ -74,8 +76,7 @@ export const AddCommentsToTenureView = (): JSX.Element => {
             />
         );
     }
-
-    if (!tenureData || !referenceData) {
+    if (!tenureData || !referenceData || !errorMessages) {
         return (
             <Center>
                 <Spinner />
@@ -112,6 +113,7 @@ export const AddCommentsToTenureView = (): JSX.Element => {
                         targetType={targetType}
                         relationships={relationships}
                         categories={categories}
+                        errorMessages={errorMessages}
                     />
                 ) : (
                     <AddCommentsViewLegacy
