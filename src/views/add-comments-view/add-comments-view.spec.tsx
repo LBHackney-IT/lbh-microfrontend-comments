@@ -92,40 +92,26 @@ test('it renders correctly with tenure details', async () => {
     await loadAddCommentToTenureForm();
 });
 
-// Will be fixed right after this PR is merged and feature can be tested on staging.
-test.skip('it validates the form on submit for person entity', async () => {
+test('it validates the form on submit for person entity', async () => {
     await loadAddCommentToPersonForm();
     const button = screen.getByText('Save comment');
     userEvent.click(button);
     await waitFor(() =>
-        expect(
-            screen.getByText('You must correct the indicated errors')
-        ).toBeInTheDocument()
+        expect(screen.getByText(mockErrorMessages.W1)).toBeInTheDocument()
     );
-    expect(
-        screen.getByText('You must provide a title for this comment')
-    ).toBeInTheDocument();
-    expect(
-        screen.getByText('You must enter a description for this comment')
-    ).toBeInTheDocument();
+    expect(screen.getByText(mockErrorMessages.W31)).toBeInTheDocument();
+    expect(screen.getByText(mockErrorMessages.W32)).toBeInTheDocument();
 });
 
-// Will be fixed right after this PR is merged and feature can be tested on staging.
-test.skip('it validates the form on submit for tenure entity', async () => {
+test('it validates the form on submit for tenure entity', async () => {
     await loadAddCommentToTenureForm();
     const button = screen.getByText('Save comment');
     userEvent.click(button);
     await waitFor(() =>
-        expect(
-            screen.getByText('You must correct the indicated errors')
-        ).toBeInTheDocument()
+        expect(screen.getByText(mockErrorMessages.W1)).toBeInTheDocument()
     );
-    expect(
-        screen.getByText('You must provide a title for this comment')
-    ).toBeInTheDocument();
-    expect(
-        screen.getByText('You must enter a description for this comment')
-    ).toBeInTheDocument();
+    expect(screen.getByText(mockErrorMessages.W31)).toBeInTheDocument();
+    expect(screen.getByText(mockErrorMessages.W32)).toBeInTheDocument();
 });
 
 test('it does not validated the form onBlur for person entity', async () => {

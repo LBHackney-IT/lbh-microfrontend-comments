@@ -46,7 +46,7 @@ const commentsReferenceData = Array.from({ length: 3 }).map((_, index) =>
     })
 );
 
-export const errorsReferenceData = Array.from({ length: 10 }).map((_, index) =>
+export const errorsReferenceData = Array.from({ length: 40 }).map((_, index) =>
     generateMockReferenceDataV1({
         category: 'errors-code',
         subCategory: 'mmh',

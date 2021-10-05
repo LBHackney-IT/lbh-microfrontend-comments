@@ -28,19 +28,13 @@ export const AddCommentForm = ({
     return (
         <>
             <SelectRelationships relationships={relationships} />
-            <Field
-                id="add-comment-title"
-                name="title"
-                label="Comment title"
-                required
-            >
+            <Field id="add-comment-title" name="title" label="Comment title">
                 <Input />
             </Field>
             <Field
                 id="add-comment-description"
                 name="description"
                 label="Comment"
-                required
             >
                 <TextArea
                     rows={5}
@@ -55,7 +49,6 @@ export const AddCommentForm = ({
                 id="add-comment-category"
                 name="categorisation.category"
                 label="Comment category"
-                required
             >
                 <Select>
                     <option value="">{selectCategory}</option>
