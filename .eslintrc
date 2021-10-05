@@ -15,31 +15,12 @@
         "eslint:recommended",
         "plugin:@typescript-eslint/recommended",
         "plugin:prettier/recommended",
-        "plugin:unicorn/recommended",
         "plugin:import/errors",
         "plugin:import/warnings",
         "plugin:import/typescript"
     ],
     "ignorePatterns": ["jest.config.js", "webpack.config.js"],
     "rules": {
-        "unicorn/no-useless-undefined": "off",
-        "unicorn/no-reduce": "off",
-        "unicorn/prefer-query-selector": "off",
-        "unicorn/no-null": "off",
-        "unicorn/prevent-abbreviations": [
-            "error",
-            {
-                "allowList": {
-                    "getServerSideProps": true,
-                    "getStaticProps": true
-                },
-                "replacements": {
-                    "env": {
-                        "environment": false
-                    }
-                }
-            }
-        ],
         "import/order": [
             "error",
             {
