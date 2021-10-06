@@ -100,7 +100,7 @@ export const AddCommentsView = ({
         {(properties) => {
           const hasFieldErrors = Object.keys(properties.errors).length > 0;
           return (
-            <Form id="add-comment-form">
+            <Form id="add-comment-form" noValidate>
               <PageAnnouncement />
 
               {(hasFieldErrors || error) && (
