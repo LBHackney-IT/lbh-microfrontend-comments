@@ -1,1 +1,0 @@
-export { addComment } from './comments';

@@ -1,1 +1,1 @@
-export * from './add-comments-to-tenure-view';
+export * from "./add-comments-to-tenure-view";

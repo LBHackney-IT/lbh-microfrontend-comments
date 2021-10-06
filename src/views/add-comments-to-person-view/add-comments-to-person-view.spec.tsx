@@ -1,49 +1,66 @@
-import React from 'react';
-import { screen, waitFor } from '@testing-library/react';
+import React from "react";
+import { getPersonV1, mockPersonV1, render, server } from "@hackney/mtfh-test-utils";
+import { screen, waitFor } from "@testing-library/react";
+import { featureToggleStore } from "@mtfh/common/lib/configuration";
+import { AddCommentsToPersonView } from "./add-comments-to-person-view";
 
-import { AddCommentsToPersonView } from './';
-import { routeRender, get } from '../../test-utils';
-import { config } from '../../services';
-import { mockPerson } from '../../mocks';
-
-const loadAddCommentsToPersonView = async () => {
-    get(`${config.personApiUrl}/persons/:id`, mockPerson);
-    const utils = routeRender(<AddCommentsToPersonView />);
+describe("AddCommentsToPersonView Legacy", () => {
+  test("it renders add comments to person view correctly", async () => {
+    render(<AddCommentsToPersonView />, {
+      url: `/comment/person/${mockPersonV1.id}`,
+      path: "/comment/person/:id",
+    });
     await waitFor(() => {
-        expect(screen.getByText('Save comment')).toBeInTheDocument();
-        expect(screen.getByTestId('backButton').textContent).toEqual(
-            'Joan Evans'
-        );
+      expect(screen.getByText("Save comment")).toBeInTheDocument();
+      expect(screen.getByTestId("backButton").textContent).toBe(
+        `${mockPersonV1.firstName} ${mockPersonV1.surname}`,
+      );
     });
-    return utils;
-};
-
-test('it renders add comments to person view correctly', async () => {
-    await loadAddCommentsToPersonView();
+  });
 });
-
-test('it shows invalid state if the fetching person returns 400', async () => {
-    get(`${config.personApiUrl}/persons/:id`, { message: 'failure' }, 400);
-    routeRender(<AddCommentsToPersonView />, {
-        url: `/comment/person/${mockPerson.id}`,
-        path: '/comment/person/:id',
+const features = featureToggleStore.getValue();
+describe("AddCommentsToPersonView", () => {
+  beforeEach(() => {
+    featureToggleStore.next({
+      ...features,
+      MMH: {
+        ...features.MMH,
+        EnhancedComments: true,
+      },
     });
-    await waitFor(() =>
-        expect(
-            screen.getByText('There was a problem retrieving the record')
-        ).toBeInTheDocument()
-    );
-});
+  });
+  afterAll(() => {
+    featureToggleStore.next(features);
+  });
 
-test('it shows an error state if the fetching person returns 500', async () => {
-    get(`${config.personApiUrl}/persons/:id`, { message: 'failure' }, 500);
-    routeRender(<AddCommentsToPersonView />, {
-        url: `/comment/person/${mockPerson.id}`,
-        path: '/comment/person/:id',
+  test("it renders add comments to person view correctly", async () => {
+    render(<AddCommentsToPersonView />, {
+      url: `/comment/person/${mockPersonV1.id}`,
+      path: "/comment/person/:id",
     });
-    await waitFor(() =>
-        expect(
-            screen.getByText('There was a problem retrieving the record')
-        ).toBeInTheDocument()
-    );
+    await waitFor(() => {
+      expect(screen.getByText("Save comment")).toBeInTheDocument();
+      expect(screen.getByTestId("backButton").textContent).toBe(
+        `${mockPersonV1.firstName} ${mockPersonV1.surname}`,
+      );
+    });
+  });
+
+  test("it shows invalid state if the fetching person returns 400", async () => {
+    server.use(getPersonV1("failure", 400));
+    render(<AddCommentsToPersonView />, {
+      url: `/comment/person/${mockPersonV1.id}`,
+      path: "/comment/person/:id",
+    });
+    await screen.findByText("There was a problem retrieving the record");
+  });
+
+  test("it shows an error state if the fetching person returns 500", async () => {
+    server.use(getPersonV1("failure", 500));
+    render(<AddCommentsToPersonView />, {
+      url: `/comment/person/${mockPersonV1.id}`,
+      path: "/comment/person/:id",
+    });
+    await screen.findByText("There was a problem retrieving the record");
+  });
 });

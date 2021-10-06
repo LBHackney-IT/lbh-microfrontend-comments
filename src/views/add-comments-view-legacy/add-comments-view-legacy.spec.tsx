@@ -1,141 +1,75 @@
-import React from 'react';
-import userEvent from '@testing-library/user-event';
-import { fireEvent, screen, waitFor } from '@testing-library/react';
-import { PageAnnouncementProvider } from '@mtfh/common';
-import { render } from '@hackney/mtfh-test-utils';
-import { locale } from '@services';
-import { AddCommentsViewLegacy } from './add-comments-view-legacy';
-import { mockPerson, mockTenure } from '../../mocks';
+import React from "react";
+import { mockPersonV1, postCommentV1, render, server } from "@hackney/mtfh-test-utils";
+import { screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { PageAnnouncementProvider } from "@mtfh/common";
+import { locale } from "@services";
+import { AddCommentsViewLegacy } from "./add-comments-view-legacy";
 
-const { personName, tenureName } = locale;
+const { personName } = locale;
 
-const loadAddCommentToPersonForm = async (id?: string) => {
-    const utils = render(
-        <PageAnnouncementProvider sessionKey="addComment">
-            <AddCommentsViewLegacy
-                targetName={personName(mockPerson)}
-                targetType="person"
-            />
-        </PageAnnouncementProvider>,
-        {
-            url: `/comment/person/${mockPerson.id}`,
-            path: '/comment/person/:id',
-        }
-    );
-    await waitFor(() => {
-        expect(screen.getByText('Save comment')).toBeInTheDocument();
-        expect(screen.getByTestId('entity-name').textContent).toEqual(
-            'Joan Evans'
-        );
-    });
-
-    return utils;
+const loadAddCommentForm = () => {
+  render(
+    <PageAnnouncementProvider sessionKey="addComment">
+      <AddCommentsViewLegacy targetName={personName(mockPersonV1)} targetType="person" />
+    </PageAnnouncementProvider>,
+    {
+      url: `/comment/person/${mockPersonV1.id}`,
+      path: "/comment/person/:id",
+    },
+  );
+  expect(screen.getByText(locale.comments.saveComment)).toBeInTheDocument();
 };
 
-const loadAddCommentToTenureForm = async (id?: string) => {
-    const utils = render(
-        <PageAnnouncementProvider sessionKey="addComment">
-            <AddCommentsViewLegacy
-                targetName={tenureName(mockTenure)}
-                targetType="tenure"
-            />
-        </PageAnnouncementProvider>,
-        {
-            url: `/comment/tenure/${mockTenure.id}`,
-            path: '/comment/tenure/:id',
-        }
-    );
-    await waitFor(() => {
-        expect(screen.getByText('Save comment')).toBeInTheDocument();
-        expect(screen.getByTestId('entity-name').textContent).toEqual(
-            'Tenure payment ref: 9148415610'
-        );
-    });
-
-    return utils;
-};
-
-test('it renders correctly with person details', async () => {
-    await loadAddCommentToPersonForm();
+test("it validates the form on submit", async () => {
+  loadAddCommentForm();
+  const button = screen.getByText(locale.comments.saveComment);
+  userEvent.click(button);
+  await screen.findByText(locale.errors.pleaseCorrectIndicatedErrorsLabel);
 });
 
-test('it renders correctly with person details', async () => {
-    await loadAddCommentToTenureForm();
+test("it submits a comment", async () => {
+  loadAddCommentForm();
+  const button = screen.getByText(locale.comments.saveComment);
+
+  const descriptionInput = screen.getByTestId("comment-form:description");
+  userEvent.type(descriptionInput, "This is a description");
+
+  userEvent.click(button);
+
+  await waitFor(() => {
+    expect(
+      screen.getByText(locale.comments.commentSuccesfullySavedLabel),
+    ).toBeInTheDocument();
+  });
 });
 
-test('it submits the form correctly for person entity', async () => {
-    await loadAddCommentToPersonForm();
-    const input = screen.getByLabelText(
-        /Comment description/
-    ) as HTMLTextAreaElement;
-    const button = screen.getByText('Save comment');
+test("it shows an error if unable to post", async () => {
+  server.use(postCommentV1("error", 500));
+  loadAddCommentForm();
 
-    userEvent.type(input, 'This is a comment');
-    userEvent.click(button);
+  const descriptionInput = screen.getByTestId("comment-form:description");
+  userEvent.type(descriptionInput, "This is a description");
 
-    await waitFor(() =>
-        expect(
-            screen.getByText('Comment successfully saved')
-        ).toBeInTheDocument()
-    );
+  const button = screen.getByText(locale.comments.saveComment);
+  userEvent.click(button);
+
+  await waitFor(() => {
+    expect(screen.queryByText(locale.errors.somethingWentWrongLabel)).toBeInTheDocument();
+  });
 });
 
-test('it submits the form correctly for tenure entity', async () => {
-    await loadAddCommentToTenureForm();
-    const input = screen.getByLabelText(
-        /Comment description/
-    ) as HTMLTextAreaElement;
-    const button = screen.getByText('Save comment');
-    userEvent.type(input, 'This is a comment');
-    userEvent.click(button);
-    await waitFor(() =>
-        expect(
-            screen.getByText('Comment successfully saved')
-        ).toBeInTheDocument()
-    );
-});
+test("it shows an errors form response", async () => {
+  server.use(postCommentV1({ errors: { description: "Description error" } }, 400));
+  loadAddCommentForm();
 
-test('it validates the form onBlur for person entity', async () => {
-    await loadAddCommentToPersonForm();
-    const input = screen.getByLabelText(
-        /Comment description/
-    ) as HTMLTextAreaElement;
-    userEvent.type(input, 'This is a comment');
-    fireEvent.change(input, { target: { value: '' } });
-    fireEvent.blur(input);
-    await waitFor(() =>
-        expect(
-            screen.getByText('Please enter a description for the comment')
-        ).toBeInTheDocument()
-    );
-});
+  const descriptionInput = screen.getByTestId("comment-form:description");
+  userEvent.type(descriptionInput, "This is a description");
 
-test('it validates the form onBlur for tenure entity', async () => {
-    await loadAddCommentToTenureForm();
-    const input = screen.getByLabelText(
-        /Comment description/
-    ) as HTMLTextAreaElement;
-    userEvent.type(input, 'This is a comment');
-    fireEvent.change(input, { target: { value: '' } });
-    fireEvent.blur(input);
-    await waitFor(() =>
-        expect(
-            screen.getByText('Please enter a description for the comment')
-        ).toBeInTheDocument()
-    );
-});
+  const button = screen.getByText(locale.comments.saveComment);
+  userEvent.click(button);
 
-test('it validates the form onBlur for tenure entity', async () => {
-    await loadAddCommentToTenureForm();
-    const input = screen.getByLabelText(
-        /Comment description/
-    ) as HTMLTextAreaElement;
-    userEvent.type(input, 'This is a comment');
-    fireEvent.change(input, { target: { value: '' } });
-    fireEvent.blur(input);
-    await waitFor(() =>
-        expect(
-            screen.getByText('Please enter a description for the comment')
-        ).toBeInTheDocument()
-    );
+  await waitFor(() => {
+    expect(screen.queryByText("Description error")).toBeInTheDocument();
+  });
 });

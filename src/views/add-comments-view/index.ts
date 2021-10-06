@@ -1,1 +1,1 @@
-export * from './add-comments-view';
+export * from "./add-comments-view";

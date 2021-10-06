@@ -1,141 +1,155 @@
-import React from 'react';
-import { Formik } from 'formik';
-import userEvent from '@testing-library/user-event';
-import { fireEvent, screen, waitFor } from '@testing-library/react';
-import { PageAnnouncementProvider } from '@mtfh/common';
-import { render } from '@hackney/mtfh-test-utils';
-import { locale } from '@services';
-import { AddCommentsView } from './add-comments-view';
-import { errorsReferenceData } from '../../test-utils';
-import { mockPerson, mockTenure } from '../../mocks';
+import React from "react";
+import { mockPersonV1, postCommentV2, render, server } from "@hackney/mtfh-test-utils";
+import { screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import commonLocale from "@mtfh/common/lib/locale";
+import { locale } from "@services";
+import { commentsReferenceData } from "../../test-utils";
+import { AddCommentsView } from "./add-comments-view";
+import { Relationship } from "types";
 
-const { personName, tenureName } = locale;
-
-const mockErrorMessages = errorsReferenceData.reduce((accumulator, object) => {
-    accumulator[object.code] = object.value;
-    return accumulator;
-}, {} as Record<string, string>);
-
-const loadAddCommentToPersonForm = async () => {
-    const utils = render(
-        <PageAnnouncementProvider sessionKey="addComment">
-            <Formik initialValues={[]} onSubmit={() => {}}>
-                <AddCommentsView
-                    categories={[]}
-                    relationships={[
-                        {
-                            targetId: mockPerson.id,
-                            targetType: 'person',
-                        },
-                        {
-                            targetId: '2',
-                            targetType: 'person',
-                        },
-                    ]}
-                    targetName={personName(mockPerson)}
-                    targetType="person"
-                    errorMessages={mockErrorMessages}
-                />
-            </Formik>
-        </PageAnnouncementProvider>,
-        {
-            url: `/comment/person/${mockTenure.id}`,
-            path: '/comment/person/:id',
-        }
-    );
-    await waitFor(() => {
-        expect(screen.getByText('Save comment')).toBeInTheDocument();
-    });
-
-    return utils;
+const { personName } = locale;
+const mockErrorMessages = commonLocale.hooks.defaultErrorMessages;
+const mockRelationships: Relationship[] = [
+  {
+    targetId: mockPersonV1.id,
+    targetType: "person",
+    label: "Person 1",
+  },
+  {
+    targetId: "test-id",
+    targetType: "person",
+    label: "Person 2",
+  },
+];
+const loadAddCommentForm = (relationships: Relationship[] = mockRelationships) => {
+  render(
+    <AddCommentsView
+      categories={commentsReferenceData}
+      relationships={relationships}
+      targetName={personName(mockPersonV1)}
+      targetType="person"
+      errorMessages={mockErrorMessages}
+    />,
+    {
+      url: `/comment/person/${mockPersonV1.id}`,
+      path: "/comment/person/:id",
+    },
+  );
+  expect(screen.getByText(locale.comments.saveComment)).toBeInTheDocument();
 };
 
-const loadAddCommentToTenureForm = async () => {
-    const utils = render(
-        <PageAnnouncementProvider sessionKey="addComment">
-            <Formik initialValues={[]} onSubmit={() => {}}>
-                <AddCommentsView
-                    categories={[]}
-                    relationships={[
-                        {
-                            targetId: mockTenure.id,
-                            targetType: 'tenure',
-                        },
-                        {
-                            targetId: '2',
-                            targetType: 'person',
-                        },
-                    ]}
-                    targetName={tenureName(mockTenure)}
-                    targetType="tenure"
-                    errorMessages={mockErrorMessages}
-                />
-            </Formik>
-        </PageAnnouncementProvider>,
-        {
-            url: `/comment/tenure/${mockTenure.id}`,
-            path: '/comment/tenure/:id',
-        }
-    );
-    await waitFor(() => {
-        expect(screen.getByText('Save comment')).toBeInTheDocument();
-    });
+test("it renders no options with 1 relationship", async () => {
+  loadAddCommentForm([
+    {
+      targetId: mockPersonV1.id,
+      targetType: "person",
+      label: "Person 1",
+    },
+  ]);
 
-    return utils;
-};
-
-test('it renders correctly with person details', async () => {
-    await loadAddCommentToPersonForm();
+  expect(screen.queryByText("Person 1")).not.toBeInTheDocument();
 });
 
-test('it renders correctly with tenure details', async () => {
-    await loadAddCommentToTenureForm();
+test("it validates the form on submit", async () => {
+  loadAddCommentForm();
+  const button = screen.getByText(locale.comments.saveComment);
+  userEvent.click(button);
+  await screen.findByText(mockErrorMessages.W1);
+  expect(screen.getByText(mockErrorMessages.W31)).toBeInTheDocument();
+  expect(screen.getByText(mockErrorMessages.W32)).toBeInTheDocument();
 });
 
-test('it validates the form on submit for person entity', async () => {
-    await loadAddCommentToPersonForm();
-    const button = screen.getByText('Save comment');
-    userEvent.click(button);
-    await waitFor(() =>
-        expect(screen.getByText(mockErrorMessages.W1)).toBeInTheDocument()
-    );
-    expect(screen.getByText(mockErrorMessages.W31)).toBeInTheDocument();
-    expect(screen.getByText(mockErrorMessages.W32)).toBeInTheDocument();
+test("it submits a comment", async () => {
+  loadAddCommentForm();
+  const button = screen.getByText(locale.comments.saveComment);
+
+  const titleInput = screen.getByLabelText(locale.comments.title, { exact: false });
+  userEvent.type(titleInput, "This is a title");
+
+  const descriptionInput = screen.getByTestId("comment-form:description");
+  userEvent.type(descriptionInput, "This is a description");
+
+  const checkbox = screen.getByLabelText("Person 2");
+  userEvent.click(checkbox);
+
+  const categorySelect = screen.getByLabelText(locale.comments.category, {
+    exact: false,
+  });
+  userEvent.selectOptions(categorySelect, "categoryCode2");
+
+  userEvent.click(button);
+
+  await waitFor(() => {
+    expect(window.location.pathname).toBe(`/person/${mockPersonV1.id}`);
+  });
 });
 
-test('it validates the form on submit for tenure entity', async () => {
-    await loadAddCommentToTenureForm();
-    const button = screen.getByText('Save comment');
-    userEvent.click(button);
-    await waitFor(() =>
-        expect(screen.getByText(mockErrorMessages.W1)).toBeInTheDocument()
-    );
-    expect(screen.getByText(mockErrorMessages.W31)).toBeInTheDocument();
-    expect(screen.getByText(mockErrorMessages.W32)).toBeInTheDocument();
+test("it shows an error if unable to post", async () => {
+  server.use(postCommentV2("error", 500));
+  loadAddCommentForm();
+  const titleInput = screen.getByLabelText(locale.comments.title, { exact: false });
+  userEvent.type(titleInput, "This is a title");
+
+  const descriptionInput = screen.getByTestId("comment-form:description");
+  userEvent.type(descriptionInput, "This is a description");
+
+  const categorySelect = screen.getByLabelText(locale.comments.category, {
+    exact: false,
+  });
+  userEvent.selectOptions(categorySelect, "categoryCode2");
+
+  const button = screen.getByText(locale.comments.saveComment);
+  userEvent.click(button);
+
+  await waitFor(() => {
+    expect(screen.queryByText(locale.errors.somethingWentWrongLabel)).toBeInTheDocument();
+  });
 });
 
-test('it does not validated the form onBlur for person entity', async () => {
-    await loadAddCommentToPersonForm();
-    const input = screen.getByLabelText(/Comment title/) as HTMLTextAreaElement;
-    userEvent.type(input, 'This is a title');
-    fireEvent.change(input, { target: { value: '' } });
-    fireEvent.blur(input);
-    await waitFor(() =>
-        expect(
-            screen.queryByText('You must enter a title for this comment')
-        ).not.toBeInTheDocument()
-    );
+test("it shows an errors form response", async () => {
+  server.use(postCommentV2({ errors: { description: "Description error" } }, 400));
+  loadAddCommentForm();
+
+  const titleInput = screen.getByLabelText(locale.comments.title, { exact: false });
+  userEvent.type(titleInput, "This is a title");
+
+  const descriptionInput = screen.getByTestId("comment-form:description");
+  userEvent.type(descriptionInput, "This is a description");
+
+  const categorySelect = screen.getByLabelText(locale.comments.category, {
+    exact: false,
+  });
+  userEvent.selectOptions(categorySelect, "categoryCode2");
+  const button = screen.getByText(locale.comments.saveComment);
+  userEvent.click(button);
+
+  await waitFor(() => {
+    expect(screen.queryByText("Description error")).toBeInTheDocument();
+  });
 });
 
-test('it does not validated the form onBlur for tenure entity', async () => {
-    await loadAddCommentToTenureForm();
-    const input = screen.getByLabelText(/Comment title/) as HTMLTextAreaElement;
-    userEvent.type(input, 'This is a title');
-    fireEvent.change(input, { target: { value: '' } });
-    fireEvent.blur(input);
-    await waitFor(() =>
-        expect(
-            screen.queryByText('You must enter a title for this comment')
-        ).not.toBeInTheDocument()
-    );
+test("it shows an error when no options are selected", async () => {
+  loadAddCommentForm();
+
+  const checkbox = screen.getByLabelText("Person 1");
+  userEvent.click(checkbox);
+
+  const titleInput = screen.getByLabelText(locale.comments.title, { exact: false });
+  userEvent.type(titleInput, "This is a title");
+
+  const descriptionInput = screen.getByTestId("comment-form:description");
+  userEvent.type(descriptionInput, "This is a description");
+
+  const categorySelect = screen.getByLabelText(locale.comments.category, {
+    exact: false,
+  });
+  userEvent.selectOptions(categorySelect, "categoryCode2");
+
+  const button = screen.getByText(locale.comments.saveComment);
+  userEvent.click(button);
+
+  await waitFor(() => {
+    expect(screen.getByText(mockErrorMessages.W4)).toBeInTheDocument();
+  });
 });
