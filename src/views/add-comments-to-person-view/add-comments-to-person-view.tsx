@@ -16,7 +16,6 @@ import { useErrorCodes, useFeatureToggle } from "@mtfh/common/lib/hooks";
 import { locale } from "../../services";
 import { Relationship } from "../../types";
 import { AddCommentsView } from "../add-comments-view";
-import { AddCommentsViewLegacy } from "../add-comments-view-legacy";
 
 const { comments, errors, personName, tenureSummaryPaymentRef } = locale;
 const { heading } = comments;
@@ -59,7 +58,6 @@ const getRelationships = (
 export const AddCommentsToPersonView = (): JSX.Element => {
   const { id } = useParams<{ id: string }>();
   const hasEnhancedPersonComments = useFeatureToggle("MMH.EnhancedPersonComments");
-  const hasEnhancedComments = useFeatureToggle("MMH.EnhancedComments");
   const { data: personData, error: personError } = usePerson(id);
   const { data: referenceData, error: referenceError } = useReferenceData<"category">({
     category: "comment",
@@ -115,17 +113,13 @@ export const AddCommentsToPersonView = (): JSX.Element => {
         }
         data-testid="add-comment-to-person"
       >
-        {hasEnhancedComments ? (
-          <AddCommentsView
-            targetName={targetName}
-            targetType={targetType}
-            relationships={relationships}
-            categories={categories}
-            errorMessages={errorMessages}
-          />
-        ) : (
-          <AddCommentsViewLegacy targetName={targetName} targetType={targetType} />
-        )}
+        <AddCommentsView
+          targetName={targetName}
+          targetType={targetType}
+          relationships={relationships}
+          categories={categories}
+          errorMessages={errorMessages}
+        />
       </Layout>
     </PageAnnouncementProvider>
   );
