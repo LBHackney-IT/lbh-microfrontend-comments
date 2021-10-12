@@ -55,7 +55,7 @@ describe("AddCommentsToTenureView", () => {
     });
 
     expect(
-      screen.getByLabelText(locale.tenureRelationship(mockActiveTenureV1)),
+      screen.getByLabelText(locale.tenurePaymentRef(mockActiveTenureV1)),
     ).toBeInTheDocument();
 
     mockActiveTenureV1.householdMembers.forEach((member) => {

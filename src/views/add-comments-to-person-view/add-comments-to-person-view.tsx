@@ -1,6 +1,7 @@
 import React from "react";
 import { Link as RouterLink, useParams } from "react-router-dom";
-import { usePerson } from "@mtfh/common/lib/api/person/v1";
+import { CommentType } from "@mtfh/common/lib/api/comments/v2";
+import { Person, usePerson } from "@mtfh/common/lib/api/person/v1";
 import { useReferenceData } from "@mtfh/common/lib/api/reference-data/v1";
 import {
   Center,
@@ -17,12 +18,47 @@ import { Relationship } from "../../types";
 import { AddCommentsView } from "../add-comments-view";
 import { AddCommentsViewLegacy } from "../add-comments-view-legacy";
 
-const { comments, errors, personName } = locale;
+const { comments, errors, personName, tenureSummaryPaymentRef } = locale;
 const { heading } = comments;
 const { unableToFetchRecord, unableToFetchRecordDescription } = errors;
 
+const getRelationships = (
+  personData: Person,
+  targetType: CommentType,
+  hasEnhancedPersonComments: boolean,
+) => {
+  const tenures: Relationship[] = [];
+  const assets: Relationship[] = [];
+
+  if (hasEnhancedPersonComments) {
+    for (const tenure of personData.tenures) {
+      tenures.push({
+        targetId: tenure.id,
+        label: tenureSummaryPaymentRef(tenure),
+        targetType: "tenure",
+      });
+      assets.push({
+        targetId: tenure.assetId,
+        label: tenure.assetFullAddress,
+        targetType: "asset",
+      });
+    }
+  }
+
+  return [
+    {
+      label: personName(personData),
+      targetId: personData.id,
+      targetType,
+    },
+    ...assets,
+    ...tenures,
+  ];
+};
+
 export const AddCommentsToPersonView = (): JSX.Element => {
   const { id } = useParams<{ id: string }>();
+  const hasEnhancedPersonComments = useFeatureToggle("MMH.EnhancedPersonComments");
   const hasEnhancedComments = useFeatureToggle("MMH.EnhancedComments");
   const { data: personData, error: personError } = usePerson(id);
   const { data: referenceData, error: referenceError } = useReferenceData<"category">({
@@ -52,12 +88,11 @@ export const AddCommentsToPersonView = (): JSX.Element => {
     );
   }
 
-  const relationships: Relationship[] = [
-    {
-      targetId: id,
-      targetType,
-    },
-  ];
+  const relationships: Relationship[] = getRelationships(
+    personData,
+    targetType,
+    hasEnhancedPersonComments,
+  );
 
   const { category: categories } = referenceData;
   const targetName = personName(personData);

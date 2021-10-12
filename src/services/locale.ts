@@ -1,4 +1,4 @@
-import type { Person } from "@mtfh/common/lib/api/person/v1";
+import type { Person, TenureSummary } from "@mtfh/common/lib/api/person/v1";
 import type { Tenure } from "@mtfh/common/lib/api/tenure/v1";
 
 const locale = {
@@ -8,8 +8,10 @@ const locale = {
   tenureName: (tenure: Tenure) => {
     return `Tenure payment ref: ${tenure.paymentReference}`;
   },
-  tenureRelationship: (tenure: Tenure) =>
+  tenurePaymentRef: (tenure: Tenure) =>
     `Tenure payment ref ${tenure.paymentReference} (${tenure.tenureType.description})`,
+  tenureSummaryPaymentRef: (tenure: TenureSummary) =>
+    `Tenure payment ref ${tenure.paymentReference} (${tenure.type})`,
   dialog: {
     title: "Are you sure you wish to cancel adding this comment?",
   },

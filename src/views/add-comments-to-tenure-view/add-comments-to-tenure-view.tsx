@@ -19,14 +19,14 @@ import { Relationship } from "../../types";
 import { AddCommentsView } from "../add-comments-view";
 import { AddCommentsViewLegacy } from "../add-comments-view-legacy";
 
-const { comments, errors, tenureName, tenureRelationship } = locale;
+const { comments, errors, tenureName, tenurePaymentRef } = locale;
 const { heading } = comments;
 const { unableToFetchRecord, unableToFetchRecordDescription } = errors;
 
 const getRelationships = (tenure: Tenure, targetType: CommentType) => {
   const relationships: Relationship[] = [
     {
-      label: tenureRelationship(tenure),
+      label: tenurePaymentRef(tenure),
       targetId: tenure.id,
       targetType,
     },
