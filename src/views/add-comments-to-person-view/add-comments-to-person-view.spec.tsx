@@ -5,20 +5,6 @@ import { featureToggleStore } from "@mtfh/common/lib/configuration";
 import { locale } from "../../services";
 import { AddCommentsToPersonView } from "./add-comments-to-person-view";
 
-describe("AddCommentsToPersonView Legacy", () => {
-  test("it renders add comments to person view correctly", async () => {
-    render(<AddCommentsToPersonView />, {
-      url: `/comment/person/${mockPersonV1.id}`,
-      path: "/comment/person/:id",
-    });
-    await waitFor(() => {
-      expect(screen.getByText("Save comment")).toBeInTheDocument();
-      expect(screen.getByTestId("backButton").textContent).toBe(
-        `${mockPersonV1.firstName} ${mockPersonV1.surname}`,
-      );
-    });
-  });
-});
 const features = featureToggleStore.getValue();
 describe("AddCommentsToPersonView", () => {
   beforeEach(() => {
@@ -26,7 +12,6 @@ describe("AddCommentsToPersonView", () => {
       ...features,
       MMH: {
         ...features.MMH,
-        EnhancedComments: true,
         EnhancedPersonComments: true,
       },
     });

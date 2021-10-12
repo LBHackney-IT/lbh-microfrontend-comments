@@ -7,41 +7,10 @@ import {
 } from "@hackney/mtfh-test-utils";
 import { screen, waitFor } from "@testing-library/react";
 
-import { featureToggleStore } from "@mtfh/common/lib/configuration";
 import { locale } from "../../services";
 import { AddCommentsToTenureView } from "./add-comments-to-tenure-view";
 
-describe("AddCommentsToTenureView Legacy", () => {
-  test("it renders add comments to tenure view correctly", async () => {
-    render(<AddCommentsToTenureView />, {
-      url: `/comment/tenure/${mockActiveTenureV1.id}`,
-      path: "/comment/tenure/:id",
-    });
-    await waitFor(() => {
-      expect(screen.getByText("Save comment")).toBeInTheDocument();
-      expect(screen.getByTestId("backButton").textContent).toEqual(
-        `Tenure payment ref: ${mockActiveTenureV1.paymentReference}`,
-      );
-    });
-  });
-});
-
-const features = featureToggleStore.getValue();
-
 describe("AddCommentsToTenureView", () => {
-  beforeEach(() => {
-    featureToggleStore.next({
-      ...features,
-      MMH: {
-        ...features.MMH,
-        EnhancedComments: true,
-      },
-    });
-  });
-  afterAll(() => {
-    featureToggleStore.next(features);
-  });
-
   test("it renders the form with all options", async () => {
     render(<AddCommentsToTenureView />, {
       url: `/comment/tenure/${mockActiveTenureV1.id}`,
