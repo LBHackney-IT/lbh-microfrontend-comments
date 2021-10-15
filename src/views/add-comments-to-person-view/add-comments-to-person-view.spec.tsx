@@ -1,23 +1,25 @@
 import React from "react";
 import { getPersonV1, mockPersonV1, render, server } from "@hackney/mtfh-test-utils";
 import { screen, waitFor } from "@testing-library/react";
-import { featureToggleStore } from "@mtfh/common/lib/configuration";
+import { $configuration } from "@mtfh/common/lib/configuration";
 import { locale } from "../../services";
 import { AddCommentsToPersonView } from "./add-comments-to-person-view";
 
-const features = featureToggleStore.getValue();
+const features = $configuration.getValue();
 describe("AddCommentsToPersonView", () => {
   beforeEach(() => {
-    featureToggleStore.next({
+    $configuration.next({
       ...features,
       MMH: {
         ...features.MMH,
-        EnhancedPersonComments: true,
+        featureToggles: {
+          EnhancedPersonComments: true,
+        },
       },
     });
   });
   afterAll(() => {
-    featureToggleStore.next(features);
+    $configuration.next(features);
   });
 
   test("it renders add comments to person view correctly", async () => {
