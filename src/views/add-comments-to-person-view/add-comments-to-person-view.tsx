@@ -11,7 +11,7 @@ import {
   PageAnnouncementProvider,
   Spinner,
 } from "@mtfh/common/lib/components";
-import { useErrorCodes, useFeatureToggle } from "@mtfh/common/lib/hooks";
+import { useErrorCodes } from "@mtfh/common/lib/hooks";
 
 import { locale } from "../../services";
 import { Relationship } from "../../types";
@@ -21,27 +21,21 @@ const { comments, errors, personName, tenureSummaryPaymentRef } = locale;
 const { heading } = comments;
 const { unableToFetchRecord, unableToFetchRecordDescription } = errors;
 
-const getRelationships = (
-  personData: Person,
-  targetType: CommentType,
-  hasEnhancedPersonComments: boolean,
-) => {
+const getRelationships = (personData: Person, targetType: CommentType) => {
   const tenures: Relationship[] = [];
   const assets: Relationship[] = [];
 
-  if (hasEnhancedPersonComments) {
-    for (const tenure of personData.tenures) {
-      tenures.push({
-        targetId: tenure.id,
-        label: tenureSummaryPaymentRef(tenure),
-        targetType: "tenure",
-      });
-      assets.push({
-        targetId: tenure.assetId,
-        label: tenure.assetFullAddress,
-        targetType: "asset",
-      });
-    }
+  for (const tenure of personData.tenures) {
+    tenures.push({
+      targetId: tenure.id,
+      label: tenureSummaryPaymentRef(tenure),
+      targetType: "tenure",
+    });
+    assets.push({
+      targetId: tenure.assetId,
+      label: tenure.assetFullAddress,
+      targetType: "asset",
+    });
   }
 
   return [
@@ -57,7 +51,6 @@ const getRelationships = (
 
 export const AddCommentsToPersonView = (): JSX.Element => {
   const { id } = useParams<{ id: string }>();
-  const hasEnhancedPersonComments = useFeatureToggle("MMH.EnhancedPersonComments");
   const { data: personData, error: personError } = usePerson(id);
   const { data: referenceData, error: referenceError } = useReferenceData<"category">({
     category: "comment",
@@ -86,11 +79,7 @@ export const AddCommentsToPersonView = (): JSX.Element => {
     );
   }
 
-  const relationships: Relationship[] = getRelationships(
-    personData,
-    targetType,
-    hasEnhancedPersonComments,
-  );
+  const relationships: Relationship[] = getRelationships(personData, targetType);
 
   const { category: categories } = referenceData;
   const targetName = personName(personData);
