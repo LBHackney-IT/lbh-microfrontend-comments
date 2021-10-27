@@ -1,3 +1,4 @@
+import { AssetAddress, AssetTenure } from "@mtfh/common/lib/api/asset/v1";
 import type { Person, TenureSummary } from "@mtfh/common/lib/api/person/v1";
 import type { Tenure } from "@mtfh/common/lib/api/tenure/v1";
 
@@ -8,9 +9,33 @@ const locale = {
   tenureName: (tenure: Tenure) => {
     return `Tenure payment ref: ${tenure.paymentReference}`;
   },
+  assetDetails: {
+    address: (assetAddress: AssetAddress): string => {
+      const {
+        postPreamble,
+        addressLine1,
+        addressLine2,
+        addressLine3,
+        addressLine4,
+        postCode,
+      } = assetAddress;
+
+      return [
+        postPreamble,
+        addressLine1,
+        addressLine2,
+        addressLine3,
+        addressLine4,
+        postCode,
+      ]
+        .filter((addressLine) => !!addressLine)
+        .join(" ");
+    },
+    newTenure: "New tenure",
+  },
   tenurePaymentRef: (tenure: Tenure) =>
     `Tenure payment ref ${tenure.paymentReference} (${tenure.tenureType.description})`,
-  tenureSummaryPaymentRef: (tenure: TenureSummary) =>
+  tenureSummaryPaymentRef: (tenure: TenureSummary | AssetTenure) =>
     `Tenure payment ref ${tenure.paymentReference} (${tenure.type})`,
   dialog: {
     title: "Are you sure you wish to cancel adding this comment?",

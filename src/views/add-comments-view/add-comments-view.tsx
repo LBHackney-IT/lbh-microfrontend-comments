@@ -13,7 +13,8 @@ const { comments, errors, dialog } = locale;
 
 export interface AddCommentViewProperties {
   targetName: string;
-  targetType: "person" | "tenure";
+  targetType: "person" | "tenure" | "asset";
+  targetTypeUrl?: "property";
   relationships: Relationship[];
   categories: ReferenceData[];
   errorMessages: Record<string, string>;
@@ -28,6 +29,7 @@ export interface AddCommentUrlParameters {
 export const AddCommentsView = ({
   targetName,
   targetType,
+  targetTypeUrl,
   relationships,
   categories,
   errorMessages,
@@ -53,6 +55,8 @@ export const AddCommentsView = ({
       ),
     );
   };
+
+  const redirectLink = targetTypeUrl || targetType;
 
   return (
     <>
@@ -81,7 +85,7 @@ export const AddCommentsView = ({
               comments.commentSuccesfullySavedLabel,
             );
             setIsBlocking(false);
-            history.push(`/${targetType}/${id}`);
+            history.push(`/${redirectLink}/${id}`);
           } catch (error: any) {
             // istanbul ignore else
             if (typeof error === "object" && error.isAxiosError === true) {
@@ -137,7 +141,7 @@ export const AddCommentsView = ({
         }}
       </Formik>
       <div>
-        <Link as={RouterLink} to={`/${targetType}/${id}`}>
+        <Link as={RouterLink} to={`/${redirectLink}/${id}`}>
           {comments.discardComment}
         </Link>
       </div>

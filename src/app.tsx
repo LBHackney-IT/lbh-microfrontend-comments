@@ -1,7 +1,11 @@
 import React from "react";
 import { Route, Switch } from "react-router-dom";
 
-import { AddCommentsToPersonView, AddCommentsToTenureView } from "./views";
+import {
+  AddCommentsToPersonView,
+  AddCommentsToPropertyView,
+  AddCommentsToTenureView,
+} from "./views";
 
 export default function App(): JSX.Element {
   return (
@@ -11,6 +15,9 @@ export default function App(): JSX.Element {
       </Route>
       <Route path="/comment/tenure/:id">
         <AddCommentsToTenureView />
+      </Route>
+      <Route path="/comment/property/:id">
+        <AddCommentsToPropertyView />
       </Route>
       <Route>
         <div>404</div>

@@ -1,5 +1,6 @@
 import {
   generateMockReferenceDataV1,
+  getAssetV1,
   getPersonV1,
   getReferenceDataV1,
   getTenureV1,
@@ -29,6 +30,7 @@ export const errorsReferenceData = Array.from({ length: 40 }).map((_, index) =>
 beforeEach(() => {
   server.use(
     getTenureV1(),
+    getAssetV1(),
     getPersonV1(),
     getReferenceDataV1([...commentsReferenceData]),
     postCommentV1(),
