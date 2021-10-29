@@ -30,11 +30,15 @@ const getRelationships = (propertyData: Asset, targetType: CommentType) => {
       targetId: propertyData.id,
       targetType,
     },
-    {
-      targetId: propertyData.tenure.id,
-      label: tenureSummaryPaymentRef(propertyData.tenure),
-      targetType: targetTypeTenure,
-    },
+    ...(propertyData.tenure?.id
+      ? [
+          {
+            targetId: propertyData.tenure.id,
+            label: tenureSummaryPaymentRef(propertyData.tenure),
+            targetType: targetTypeTenure,
+          },
+        ]
+      : []),
   ];
 };
 
