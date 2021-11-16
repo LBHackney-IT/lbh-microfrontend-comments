@@ -1,9 +1,13 @@
 import React from "react";
 import { Link as RouterLink, useParams } from "react-router-dom";
+
+import { locale } from "../../services";
+import { Relationship } from "../../types";
+import { AddCommentsView } from "../add-comments-view";
+
 import type { CommentType } from "@mtfh/common/lib/api/comments/v2";
 import { useReferenceData } from "@mtfh/common/lib/api/reference-data/v1";
 import { Tenure, useTenure } from "@mtfh/common/lib/api/tenure/v1";
-
 import {
   Center,
   ErrorSummary,
@@ -13,10 +17,6 @@ import {
   Spinner,
 } from "@mtfh/common/lib/components";
 import { useErrorCodes } from "@mtfh/common/lib/hooks";
-
-import { locale } from "../../services";
-import { Relationship } from "../../types";
-import { AddCommentsView } from "../add-comments-view";
 
 const { comments, errors, tenureName, tenurePaymentRef } = locale;
 const { heading } = comments;

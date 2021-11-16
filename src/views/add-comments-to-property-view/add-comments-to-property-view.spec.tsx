@@ -1,6 +1,8 @@
 import React from "react";
+
 import { getAssetV1, mockAssetV1, render, server } from "@hackney/mtfh-test-utils";
 import { screen, waitFor } from "@testing-library/react";
+
 import { locale } from "../../services";
 import { AddCommentsToPropertyView } from "./add-comments-to-property-view";
 

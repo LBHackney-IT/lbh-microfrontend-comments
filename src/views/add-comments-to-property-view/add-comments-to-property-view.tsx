@@ -1,5 +1,10 @@
 import React from "react";
 import { Link as RouterLink, useParams } from "react-router-dom";
+
+import { locale } from "../../services";
+import { Relationship } from "../../types";
+import { AddCommentsView } from "../add-comments-view";
+
 import { Asset, useAsset } from "@mtfh/common/lib/api/asset/v1";
 import { CommentType } from "@mtfh/common/lib/api/comments/v2";
 import { useReferenceData } from "@mtfh/common/lib/api/reference-data/v1";
@@ -12,10 +17,6 @@ import {
   Spinner,
 } from "@mtfh/common/lib/components";
 import { useErrorCodes } from "@mtfh/common/lib/hooks";
-
-import { locale } from "../../services";
-import { Relationship } from "../../types";
-import { AddCommentsView } from "../add-comments-view";
 
 const { comments, errors, assetDetails, tenureSummaryPaymentRef } = locale;
 const { heading } = comments;

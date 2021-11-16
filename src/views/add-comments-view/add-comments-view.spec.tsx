@@ -1,11 +1,15 @@
 import React from "react";
+
 import { mockPersonV1, postCommentV2, render, server } from "@hackney/mtfh-test-utils";
 import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import commonLocale from "@mtfh/common/lib/locale";
-import { locale } from "@services";
+
 import { commentsReferenceData } from "../../test-utils";
 import { AddCommentsView } from "./add-comments-view";
+
+import commonLocale from "@mtfh/common/lib/locale";
+
+import { locale } from "@services";
 import { Relationship } from "types";
 
 const { personName } = locale;

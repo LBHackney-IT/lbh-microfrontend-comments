@@ -1,4 +1,5 @@
 import React from "react";
+
 import {
   getTenureV1,
   mockActiveTenureV1,

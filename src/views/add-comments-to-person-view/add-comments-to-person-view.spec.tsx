@@ -1,6 +1,8 @@
 import React from "react";
+
 import { getPersonV1, mockPersonV1, render, server } from "@hackney/mtfh-test-utils";
 import { screen, waitFor } from "@testing-library/react";
+
 import { locale } from "../../services";
 import { AddCommentsToPersonView } from "./add-comments-to-person-view";
 

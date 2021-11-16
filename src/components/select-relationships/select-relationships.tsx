@@ -1,8 +1,11 @@
 import React from "react";
+
 import { useFormikContext } from "formik";
-import { Checkbox, CheckboxGroup, Field, FieldProps } from "@mtfh/common/lib/components";
+
 import { Relationship } from "../../types/relationships";
 import { CommentsFormData } from "../comment-form/schema";
+
+import { Checkbox, CheckboxGroup, Field, FieldProps } from "@mtfh/common/lib/components";
 
 interface SelectRelationshipsProps extends Omit<FieldProps, "children"> {
   relationships: Relationship[];

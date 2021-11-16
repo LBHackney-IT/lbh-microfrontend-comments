@@ -1,13 +1,16 @@
 import React, { useState } from "react";
-import { Form, Formik } from "formik";
 import { Link as RouterLink, useHistory, useParams } from "react-router-dom";
+
+import { Form, Formik } from "formik";
+
+import { AddCommentForm, CommentsFormData, commentsSchema } from "../../components";
+import { locale } from "../../services";
+import { Relationship } from "../../types";
+
 import { Button, ErrorSummary, PageAnnouncement } from "@mtfh/common";
 import { addComment } from "@mtfh/common/lib/api/comments/v2";
 import { ReferenceData } from "@mtfh/common/lib/api/reference-data/v1";
 import { DialogPrompt, Link } from "@mtfh/common/lib/components";
-import { AddCommentForm, CommentsFormData, commentsSchema } from "../../components";
-import { locale } from "../../services";
-import { Relationship } from "../../types";
 
 const { comments, errors, dialog } = locale;
 

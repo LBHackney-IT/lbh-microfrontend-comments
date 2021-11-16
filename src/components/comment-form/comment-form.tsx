@@ -1,11 +1,14 @@
 import React from "react";
+
 import { FormikProps } from "formik";
-import { Checkbox, Field, Input, Select, TextArea } from "@mtfh/common";
-import { ReferenceData } from "@mtfh/common/lib/api/reference-data/v1";
 
 import { locale } from "../../services";
 import { SelectRelationships } from "../select-relationships";
 import { CommentsFormData } from "./schema";
+
+import { ReferenceData } from "@mtfh/common/lib/api/reference-data/v1";
+import { Checkbox, Field, Input, Select, TextArea } from "@mtfh/common/lib/components";
+
 import { Relationship } from "types";
 
 import "./comment-form.styles.scss";

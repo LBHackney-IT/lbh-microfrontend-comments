@@ -34,7 +34,7 @@ references:
 executors:
     node-executor:
         docker:
-            - image: circleci/node:14.15.4-browsers
+            - image: circleci/node:14.17.0-browsers
     docker-terraform:
         docker:
             - image: "hashicorp/terraform:light"
@@ -128,13 +128,14 @@ jobs:
             - run:
                 name: build
                 command: |
-                    export NOTES_API_URL=$(aws ssm get-parameter --name /housing-tl/<<parameters.stage>>/notes-api-url --query Parameter.Value --output text)
-                    export PERSON_API_URL=$(aws ssm get-parameter --name /housing-tl/<<parameters.stage>>/person-api-url --query Parameter.Value --output text)
-                    export TENURE_API_URL=$(aws ssm get-parameter --name /housing-tl/<<parameters.stage>>/tenure-api-url --query Parameter.Value --output text)
+                    export APP_ENV=<<parameters.stage>>
+                    export APP_CDN=$(aws ssm get-parameter --name /housing-tl/<<parameters.stage>>/comments-app-url --query Parameter.Value --output text)
                     yarn build
             - run:
                   name: Deploy to S3
-                  command: aws s3 sync dist s3://lbh-housing-tl-comments-frontend-development.hackney.gov.uk/
+                  command: |
+                    aws s3 sync dist s3://lbh-housing-tl-comments-frontend-development.hackney.gov.uk/ --exclude "*.json" --cache-control "public, immutable, max-age=31536000"
+                    aws s3 sync dist s3://lbh-housing-tl-comments-frontend-development.hackney.gov.uk/ --include "*.json" --cache-control "public, must-revalidate, max-age=0"
     build-deploy-staging:
         executor: node-executor
         environment:
@@ -148,13 +149,14 @@ jobs:
             - run:
                 name: build
                 command: |
-                    export NOTES_API_URL=$(aws ssm get-parameter --name /housing-tl/<<parameters.stage>>/notes-api-url --query Parameter.Value --output text)
-                    export PERSON_API_URL=$(aws ssm get-parameter --name /housing-tl/<<parameters.stage>>/person-api-url --query Parameter.Value --output text)
-                    export TENURE_API_URL=$(aws ssm get-parameter --name /housing-tl/<<parameters.stage>>/tenure-api-url --query Parameter.Value --output text)
+                    export APP_ENV=<<parameters.stage>>
+                    export APP_CDN=$(aws ssm get-parameter --name /housing-tl/<<parameters.stage>>/comments-app-url --query Parameter.Value --output text)
                     yarn build
             - run:
                   name: Deploy to S3
-                  command: aws s3 sync dist s3://lbh-housing-tl-comments-frontend-staging.hackney.gov.uk/
+                  command: |
+                    aws s3 sync dist s3://lbh-housing-tl-comments-frontend-staging.hackney.gov.uk/ --exclude "*.json" --cache-control "public, immutable, max-age=31536000"
+                    aws s3 sync dist s3://lbh-housing-tl-comments-frontend-staging.hackney.gov.uk/ --include "*.json" --cache-control "public, must-revalidate, max-age=0"
     build-deploy-production:
         executor: node-executor
         environment:
@@ -168,13 +170,14 @@ jobs:
             - run:
                 name: build
                 command: |
-                    export NOTES_API_URL=$(aws ssm get-parameter --name /housing-tl/<<parameters.stage>>/notes-api-url --query Parameter.Value --output text)
-                    export PERSON_API_URL=$(aws ssm get-parameter --name /housing-tl/<<parameters.stage>>/person-api-url --query Parameter.Value --output text)
-                    export TENURE_API_URL=$(aws ssm get-parameter --name /housing-tl/<<parameters.stage>>/tenure-api-url --query Parameter.Value --output text)
+                    export APP_ENV=<<parameters.stage>>
+                    export APP_CDN=$(aws ssm get-parameter --name /housing-tl/<<parameters.stage>>/comments-app-url --query Parameter.Value --output text)
                     yarn build
             - run:
                   name: Deploy to S3
-                  command: aws s3 sync dist s3://lbh-housing-tl-comments-frontend-production.hackney.gov.uk/
+                  command: |
+                    aws s3 sync dist s3://lbh-housing-tl-comments-frontend-production.hackney.gov.uk/ --exclude "*.json" --cache-control "public, immutable, max-age=31536000"
+                    aws s3 sync dist s3://lbh-housing-tl-comments-frontend-production.hackney.gov.uk/ --include "*.json" --cache-control "public, must-revalidate, max-age=0"
 
     assume-role-development:
         executor: docker-python
