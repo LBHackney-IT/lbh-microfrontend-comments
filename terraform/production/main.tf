@@ -44,7 +44,7 @@ module "cloudfront-production" {
 }
 
 resource "aws_ssm_parameter" "cdn" {
-  name  = "/housing-tl/production/auth-app-url"
+  name  = "/housing-tl/production/comments-app-url"
   type  = "String"
   value = "https://${module.cloudfront-production.cloudfront_domain_name}"
   overwrite = true
