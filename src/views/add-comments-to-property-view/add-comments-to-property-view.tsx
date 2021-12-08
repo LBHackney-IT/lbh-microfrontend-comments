@@ -81,19 +81,17 @@ export const AddCommentsToPropertyView = (): JSX.Element => {
   return (
     <PageAnnouncementProvider sessionKey="addComment">
       <Layout
-        top={
-          <>
-            <Link
-              as={RouterLink}
-              to={`/property/${id}`}
-              variant="back-link"
-              data-testid="backButton"
-            >
-              {targetName}
-            </Link>
-            <h1 className="lbh-heading-h1">{heading}</h1>
-          </>
+        backLink={
+          <Link
+            as={RouterLink}
+            to={`/property/${id}`}
+            variant="back-link"
+            data-testid="backButton"
+          >
+            {targetName}
+          </Link>
         }
+        top={<h1 className="lbh-heading-h1">{heading}</h1>}
         data-testid="add-comment-to-property"
       >
         <AddCommentsView
