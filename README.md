@@ -2,7 +2,7 @@
 
 This is the Comments micro-frontend for the MTFH project. This app is not intended to be
 run in isolation in production, but managed through it's
-[root app](https://github.com/LBHackney-IT/mtfh-frontend-root).
+[root app](https://github.com/LBHackney-IT/lbh-microfrontend-root).
 
 The values can be found in the development AWS account in the Parameter Store (eu-west-2).
 
